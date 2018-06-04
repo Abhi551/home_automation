@@ -127,7 +127,7 @@ class controls(SmartApi):
                 print ("no such device registered")
 
     
-        elif re.search("device" , str(device_operate)) and re.search("off" , str(device_operate)):
+        elif re.search("device" , str(device_operate)) and re.search("off|of" , str(device_operate)):
             if re.search(r"1|one" , str(device_operate)):
                 url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"off"
                 print (url_parsed)
