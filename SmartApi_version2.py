@@ -45,7 +45,7 @@ class SmartApi():
                 try:
                     command = r.recognize_google(audio).lower()
                     print('You said: ' + command + '\n')
-                    
+                    return (str(command))
             #loop back to continue to listen for commands if unrecognizable speech is received
                 except sr.UnknownValueError:
                     print("We couldn't understand your last command \nTry Again!")
@@ -61,7 +61,6 @@ class SmartApi():
                 except Exception as e :
                     print ("Unknown Issues")
                     self.myCommand()
-                return (str(command))
         except Exception as e:
             print ("Unknown Issues executed")
             print (e)
@@ -86,13 +85,17 @@ class controls(SmartApi):
         print ("options for light controls are \n device 1 \n device 2 \n device 3 \n device 4 \n all devices")              
         engine.say("options for light controls are device 1 device 2 device 3 device 4 and all devices ")              
 
-        print ("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say control other devices")
-        engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say control other devices")
+        print ("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
+        engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
         engine.runAndWait()
 
         ## working on device 2 only
         ## checking the device input by user 
-        device_operate = SmartApi.myCommand(self)
+
+        ##>>>>> change this 
+        
+        device_operate =  raw_input("device_operate = ")
+        #device_operate = SmartApi.myCommand(self)
         print (str(device_operate))
         
         ## check the current status of all devices 
@@ -102,112 +105,121 @@ class controls(SmartApi):
         ## upgrade for all other devices 
 
         if re.search("device" , str(device_operate)) and re.search("on" , str(device_operate)):
-            if re.search(r"1|one" , str(device_operate)):
+            if re.search(r" 1 | one " , str(device_operate)):
                 if device_status['status1'] == 'on':
                     print ("device 1 is already on")
                     engine.say("device 1 is already on")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"on"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"2|to|two" , str(device_operate)):
-                if device_status['status1'] == 'on':
-                    print ("device 1 is already on")
-                    engine.say("device 1 is already on")
+                    requests.get(url_parsed)                    #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" 2 | to | two " , str(device_operate)):
+                if device_status['status2'] == 'on':
+                    print ("device 2 is already on")
+                    engine.say("device 2 is already on")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"on"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"3|three|tree" , str(device_operate)):
-                if device_status['status1'] == 'on':
-                    print ("device 1 is already on")
-                    engine.say("device 1 is already on")
+                    requests.get(url_parsed)                    #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" 3 | three | tree " , str(device_operate)):
+                if device_status['status3'] == 'on':
+                    print ("device 3 is already on")
+                    engine.say("device 3 is already on")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status3"+"="+"on"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"4|four" , str(device_operate)):
-                if device_status['status1'] == 'on':
-                    print ("device 1 is already on")
-                    engine.say("device 1 is already on")
+                    requests.get(url_parsed)                    #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" 4 | four " , str(device_operate)):
+                if device_status['status4'] == 'on':
+                    print ("device 4 is already on")
+                    engine.say("device 4 is already on")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status4"+"="+"on"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"all" , str(device_operate)):
+                    requests.get(url_parsed)                    #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" all " , str(device_operate)):
                 if device_status['status1'] == 'on' and device_status['status4'] == 'on' and device_status['status3'] == 'on' and device_status['status2'] == 'on':
                     print ("all devices are already on")
                     engine.say("all devices are already on")
                 else:
-                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"on"
-                    requests.get(url_parsed)
+                    requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"on")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"on")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status3"+"="+"on")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status4"+"="+"on")
+                    ## check the status of all other device 
+                    print (device_status)
             else :
-                self.lights()
                 engine.say("no such device registered")
                 engine.runAndWait()
                 print ("no such device registered")
-
-    
+                self.lights()
         elif re.search("device" , str(device_operate)) and re.search("off|of" , str(device_operate)):
-            if re.search(r"1|one" , str(device_operate)):
+            if re.search(r" 1 " , str(device_operate)):
                 if device_status['status1'] == 'off':
                     print ("device 1 is already off")
                     engine.say("device 1 is already off")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"off"
-                    print (url_parsed)
-                requests.get(url_parsed)
-            elif re.search(r"2|to|two" , str(device_operate)):
+                    requests.get(url_parsed)
+                    print (url_parsed)                                #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r"2 | to | two " , str(device_operate)):
                 if device_status['status2'] == 'off':
                     print ("device 2 is already off")
                     engine.say("device 2 is already off")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"off"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"3|three|tree" , str(device_operate)):
+                    requests.get(url_parsed) #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" 3 | three | tree " , str(device_operate)):
                 if device_status['status3'] == 'off':
                     print ("device 3 is already off")
                     engine.say("device 3 is already off")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status3"+"="+"off"
-                    print (url_parsed)
-                    requests.get(url_parsed)
-            elif re.search(r"4|four" , str(device_operate)):
+                    requests.get(url_parsed)                                #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)                    
+            elif re.search(r" 4 | four " , str(device_operate)):
                 if device_status['status4'] == 'off':
                     print ("device 4 is already off")
                     engine.say("device 4 is already off")
                     engine.runAndWait()
                 else :
                     url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status4"+"="+"off"
-                    print (url_parsed)
-                requests.get(url_parsed)
-            elif re.search(r"all" , str(device_operate)):
+                    requests.get(url_parsed)                                #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+            elif re.search(r" all " , str(device_operate)):
                 if device_status['status1'] == 'off' and device_status['status2'] == 'off' and device_status['status3'] == 'off' and device_status['status4'] == 'off':
-                    print ("device 1 is already off")
-                    engine.say("device 1 is already off")
+                    print ("all devices are  already off")
+                    engine.say("all devices are already off")
                     engine.runAndWait()
                 else :
-                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"off"
-                    requests.get(url_parsed)
+                    requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status1"+"="+"off")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"off")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status3"+"="+"off")
                     requests.get(fixed_url+"api_key="+self.response["api_key"]+"&"+"status4"+"="+"off")
+                    ## check the status of all other device 
+                    print (device_status)
             else :
-                self.lights()
                 engine.say("no such device registered")
                 engine.runAndWait()
                 print ("no such device registered")
+                self.lights()
         elif re.search(r"log[.]out" , str(device_operate)):
             response["api_key"] = None
             print ("Exiting the Smart Api")
@@ -217,10 +229,10 @@ class controls(SmartApi):
         elif re.search('enter',str(device_operate)) and re.search('console',str(device_operate)):
             return 1
         else :
-            self.lights()
             engine.say("no such device registered")
             engine.runAndWait()
             print ("no such device registered")
+            self.lights()
 
 
 
@@ -234,9 +246,8 @@ class controls(SmartApi):
         engine.say("to exit the console say exit")
         engine.runAndWait()
 
-        extract_command = SmartApi.myCommand(self)
-    
-
+        ## >>>> #extract_command = str(SmartApi.myCommand(self))
+        extract_command = raw_input('extract_command = ')
         ## this loop works fine and returns only expected value
         if re.search(r"home automation" , extract_command) and re.search(r"login" , extract_command) :
 
@@ -251,7 +262,9 @@ class controls(SmartApi):
                 engine.runAndWait()
 
                 ## takes the input for mail_id
-                self.mail_id = SmartApi.myCommand(self)
+
+                ## >>>> extra   self.mail_id = SmartApi.myCommand(self)
+                self.mail_id = 'chetna agarwal'
 
                 ## taking the password for only 1 id , chetna agarwal
                 ## that can be upgraded afterwards , for multiple users
@@ -289,12 +302,12 @@ class controls(SmartApi):
                                     while (re.search(user_input , 'yes')):
                                         ## which device to operate by user   
                                         print ("currently working for lights only") 
-                                        print ("what do you want to control \n1. alarm  \n2.lights")
+                                        print ("what do you want to control \n1. alarm  \n2. lights")
                                         engine.say("choose one of them what do you want to control alarm or lights")
                                         engine.runAndWait()                                             
-                                        self.device_operate = SmartApi.myCommand(self)
-
-                                        if re.search(r'lights|light' , self.device_operate):
+                                        #>>>>>>>>>>>>>>>>>>>>>>>>>>>            #self.device_operate = SmartApi.myCommand(self)
+                                        self.device_operate = raw_input("device operate = ")
+                                        if re.search(r'lights|light' , self.device_operate) and ('lights' in  self.device_operate):
                                             ## call lights
                                             self.lights()
                                         elif re.search(r'alarm' , self.device_operate):
@@ -311,21 +324,16 @@ class controls(SmartApi):
                                         print ("do you want to continue , yes or no") 
                                         engine.say("do you want to continue , yes or no")
                                         engine.runAndWait()
-                                        user_input = SmartApi.myCommand(self)
+                                        #>>>>>>>>>>>>>>>>>>>>>>>>>>>           user_input = SmartApi.myCommand(self)
+                                        user_input =  raw_input("user_input = ")
                                         if re.search('no' , user_input) or re.search('logout',  user_input):
                                             print ("logging out of system")
                                             engine.say("logging out of system")
                                             engine.runAndWait()
                                             self.response['api_key'] = "0"
                                             self.commands()
-
                                         else :
                                             pass
-
-                                            
-
-
-
                         elif flag > 0:
                         ## for wrong attempts
                             engine.say("Enter your password")
@@ -348,6 +356,7 @@ class controls(SmartApi):
             sys.exit()
         else :
             print ("Unexpected command given by user ")
+            self.commands()
             engine.say("Unexpected command given by user")
             engine.runAndWait()            
 
