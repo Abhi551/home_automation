@@ -77,34 +77,43 @@ class controls():
         ## first parser is used but it doesn't give result always and it doesn't recognize the days of wee
         while 1:
             print ("typical statement of form , set alarm to 7:00 p.m. for Monday")
-            alarm_set =  SmartApi.command(self)
+            #alarm_set =  SmartApi.command(self)
             alarm_set = raw_input("set alarm = ")
             try:
                 date_time = parser.parse(alarm_set , fuzzy = True)
                 date_time = str(date_time)
+
                 date_time = date_time.split(" ")
                 ## user customized regex for recognition of day and time of alarm_set
                 if re.findall(r'monday' , alarm_set):
                     day = re.findall(r'monday' , alarm_set)
-                elif re.findall(r'tuesday' , alarm_set):
+                if re.findall(r'tuesday' , alarm_set):
                     day = re.findall(r'tuesday' , alarm_set)
-                elif re.findall(r'wednesday' , alarm_set):
+                if re.findall(r'wednesday' , alarm_set):
                     day = re.findall(r'wednesday' , alarm_set)
-                elif re.findall(r'thursday' , alarm_set):
+                if re.findall(r'thursday' , alarm_set):
                     day = re.findall(r'thursday' , alarm_set)
-                elif re.findall(r'friday' , alarm_set):
+                if re.findall(r'friday' , alarm_set):
                     day = re.findall(r'friday', alarm_set)
-                elif re.findall(r'saturday' , alarm_set):
+                if re.findall(r'saturday' , alarm_set):
                     day = re.findall(r'saturday' , alarm_set)
-                elif re.findall(r'sunday' , alarm_set):
+                if re.findall(r'sunday' , alarm_set):
                     day = re.findall(r'sunday' , alarm_set)
 
                 '''
                 time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
-                print ("time = %s" %(time))
-                print ("day = %s" %(day))
-                print ("date_time = %s "%(date_time))
                 '''
+                week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
+                print ("time = %s" %(time))
+                print ("date_time = %s "%(date_time))
+                try :
+                    print ('day = %s' %(day))
+                except Exception as e:
+                    print ('day is not specified so by default current day is used')
+                    day = parser.parse(alarm_set , fuzzy = True).weekday()
+                    print ('day = %s' %week_days[day])
+
+
                 ## parse this into database  
                 #return (date_time , day , time)
                 engine.say("do you want to set another alarm yes or no")
@@ -116,10 +125,11 @@ class controls():
                 user_input = raw_input("do you want to set another alarm , yes or no ")
                 if re.search(r'no',user_input):
                     return 1
+        
             except Exception as e:
                 print (e)
                 print ("alarm set in wrong format")
-
+            
 
     ## lights function for accessing the lights 
     def lights(self):
