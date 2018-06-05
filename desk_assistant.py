@@ -126,7 +126,7 @@ class assistant(SmartApi):
                 engine.runAndWait()
     def search(self):
         command = SmartApi.command(self)
-        if 'who is' in command:
+        elif 'who is' in command:
             command = command.split()
             name = command[2]
             print("Hold on satyam, I will tell you who " + name + " is.")
