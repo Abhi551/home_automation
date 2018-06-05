@@ -120,7 +120,7 @@ class controls():
                 engine.runAndWait()
 
                 ## call the SmartApi()
-                #user_input = SmartApi.command(self)
+                #user_input = SmartApi.myCommand(self)
 
                 user_input = raw_input("do you want to set another alarm , yes or no ")
                 if re.search(r'no',user_input):
