@@ -298,21 +298,20 @@ class controls(SmartApi):
                                     self.response = ast.literal_eval(requests_out.text)
                                     user_input = 'yes'
                                     while (re.search(user_input , 'yes')):
-                                        ## which device to operate by user   
-                                        print ("currently working for lights only") 
+                                        ## which device to operate by user  
                                         print ("what do you want to control \n1. alarm  \n2. lights")
                                         engine.say("choose one of them what do you want to control alarm or lights")
                                         engine.runAndWait()                                             
                                         #>>>>>>>>>>>>>>>>>>>>>>>>>>>            #self.device_operate = SmartApi.myCommand(self)
                                         self.device_operate = raw_input("device operate = ")
-                                        if re.search(r'lights|light' , self.device_operate) and ('lights' in  self.device_operate):
+                                        if re.search(r'lights|light' , self.device_operate) :
                                             ## call lights
                                             self.lights()
                                         elif re.search(r'alarm' , self.device_operate):
+                                            print ("Module is incomplete") 
                                             engine.say("Module is incomplete")
                                             engine.runAndWait()
-                                            ## call alarm function here 
-                                            ("Module is incomplete") 
+                                            ## call alarm function here
                                         else :
                                             print ("I cannot control %s " %self.device_operate)
                                             engine.say("I cannot control %s " %self.device_operate)
@@ -346,7 +345,16 @@ class controls(SmartApi):
         
  
             ## we will exit  while loop only after flag becomes 0
-            ## variable to check no of attempts        
+            ## variable to check no of attempts  
+            else :   
+                print ("three wrong attempts for mail id , try again")
+                engine.say("three wrong attempts for mail id , try again")
+                engine.runAndWait()
+                print ("Exiting the program ")
+                engine.say("Exiting the program")
+                engine.runAndWait()
+                sys.exit()
+   
             
         elif re.search(r'exit' , extract_command):
             print ("Exiting the console")
