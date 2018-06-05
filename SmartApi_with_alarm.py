@@ -21,6 +21,7 @@ voices = engine.getProperty("voices")
 engine.setProperty('voice' , voices[1].id)
 engine.setProperty('rate' , 150)
 
+##http://codeglobal.in/home_automation1/alarm.php?api_key=a1ebc37f43ee497ca453f84a9e9e7d11&mode=set&alarm_date=2018-06-11&alarm_time=19:00:00&alarm_day=monday
 url = "http://codeglobal.in/home_automation1/alarms.php?api_key=456dsfmdm455&mode=set&time=bsdh&hours="
 
 class SmartApi():
@@ -72,13 +73,17 @@ class controls(SmartApi):
     def alarms(self):
 
         ## typical statement will be of form , set alarm to 7:00 p.m. for Monday
-
-
+        self.response = {}
+        self.response['api_key'] = "a1ebc37f43ee497ca453f84a9e9e7d11"
         ## first parser is used but it doesn't give result always and it doesn't recognize the days of wee
         while 1:
-            print ("typical statement of form , set alarm to 7:00 p.m. for Monday")
-            alarm_set =  SmartApi.myCommand(self)
-            #alarm_set = raw_input("set alarm = ")
+            alarm_url = "http://codeglobal.in/home_automation1/alarm.php?"
+            print ("typical statement of form , set or remove alarm to 7:00 p.m. for Monday")
+            engine.say("typical statement of form , set or remove alarm to 7:00 p.m. for Monday")
+            engine.runAndWait()
+
+            #alarm_set =  SmartApi.myCommand(self)
+            alarm_set = raw_input("set alarm = ")
             if re.search(r'alarm' , alarm_set) and (re.search(r'set' , alarm_set) or re.search(r'remove' , alarm_set)):
                 try:
                     date_time = parser.parse(alarm_set , fuzzy = True)
@@ -87,20 +92,21 @@ class controls(SmartApi):
                     date_time = date_time.split(" ")
                     ## user customized regex for recognition of day and time of alarm_set
                     if re.findall(r'monday' , alarm_set):
-                       alarm_day = re.findall(r'monday' , alarm_set)
+                       alarm_day = re.findall(r'monday' , alarm_set)[0]
                     if re.findall(r'tuesday' , alarm_set):
-                       alarm_day = re.findall(r'tuesday' , alarm_set)
+                       alarm_day = re.findall(r'tuesday' , alarm_set)[0]
                     if re.findall(r'wednesday' , alarm_set):
-                       alarm_day = re.findall(r'wednesday' , alarm_set)
+                       alarm_day = re.findall(r'wednesday' , alarm_set)[0]
                     if re.findall(r'thursday' , alarm_set):
-                       alarm_day = re.findall(r'thursday' , alarm_set)
+                       alarm_day = re.findall(r'thursday' , alarm_set)[0]
                     if re.findall(r'friday' , alarm_set):
-                       alarm_day = re.findall(r'friday', alarm_set)
+                       alarm_day = re.findall(r'friday', alarm_set)[0]
                     if re.findall(r'saturday' , alarm_set):
-                       alarm_day = re.findall(r'saturday' , alarm_set)
+                       alarm_day = re.findall(r'saturday' , alarm_set)[0]
                     if re.findall(r'sunday' , alarm_set):
-                       alarm_day = re.findall(r'sunday' , alarm_set)
+                       alarm_day = re.findall(r'sunday' , alarm_set)[0]
 
+                    ## use of regex to find exact time 
                     '''
                     time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
                     '''
@@ -108,9 +114,9 @@ class controls(SmartApi):
                     alarm_time , alarm_date = date_time[1] , date_time[0]
 
                     if re.findall(r'remove' , alarm_set):
-                        action = 'remove'
+                        mode = 'remove'
                     else :
-                        action = 'set'
+                        mode = 'set'
 
                     ## thus 4 things are to be passed in the database 
                     ## action , alarm_day , alarm_date , alarm_time
@@ -123,7 +129,23 @@ class controls(SmartApi):
                         day = parser.parse(alarm_set , fuzzy = True).weekday()
                         print ('day = %s' %week_days[day])
                         alarm_day = week_days[day]
-                    print ("action = %s " %(action))
+                    print ("mode = %s " %(mode))
+                    alarm_url = alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time
+                    print (alarm_url)
+                    r = requests.get(alarm_url)
+                    output = ast.literal_eval(r.text)
+                    if output['success'] == "1":
+                        print ("ok , alarm had been added")
+                        engine.say("ok , alarm had been added")
+                        engine.runAndWait()
+                    elif output['success'] == '-1':
+                        print ("ok , alarm already exists ")
+                        engine.say("ok , alarm already exists")
+                        engine.runAndWait()
+                    elif output['success'] == "0":
+                        print ("ok , alarm had been removed")
+                        engine.say("ok , alarm had been removed")
+                        engine.runAndWait()
 
 
                     ## parse this into database  
@@ -132,15 +154,15 @@ class controls(SmartApi):
                     engine.runAndWait()
 
                     ## call the SmartApi()
-                    user_input = SmartApi.myCommand(self)
-                    #user_input = raw_input("do you want to set another alarm , yes or no \n")
+                    #user_input = SmartApi.myCommand(self)
+                    user_input = raw_input("do you want to set another alarm , yes or no \n")
                     if re.search(r'no',user_input):
                         return 1
             
                 except Exception as e:
                     print (e)
                     print ("alarm set in wrong format")
-            else :
+            else :  
                 print ("Try Again")
                 engine.say("Try Again")
                 engine.runAndWait()                
@@ -150,33 +172,43 @@ class controls(SmartApi):
 
         fixed_url = "http://codeglobal.in/home_automation1/update.php?"
 
-
-        ## which device to operate by user                
-        print ("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back" )
-        engine.say("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back")
-        engine.runAndWait()
-
         ## working on device 2 only
         ## checking the device input by user 
         
-        #>>>>>>device_operate = SmartApi.myCommand(self)
-        device_operate = raw_input("device_operate = ")
-        print (str(device_operate))
-
         while 1 :
-
+            print ("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back" )
+            engine.say("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back")
+            engine.runAndWait()
+            #>>>>>>device_operate = SmartApi.myCommand(self)
+            device_operate = raw_input("device_operate = ")
+            print (str(device_operate))
             #requests.get("http://codeglobal.in/home_automation1/update.php?api_key=a1ebc37f43ee497ca453f84a9e9e7d11&status2=off
             ## upgrade for all other devices 
+            device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11").text)
+            device_status = ast.literal_eval(device_status)['hardware'][0]
             response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"}
             if re.search("device 2|device to" , str(device_operate)) and re.search("on" , str(device_operate)):
-                url_parsed =  fixed_url+"api_key="+response["api_key"]+"&"+"status2"+"="+"on"
-                print (url_parsed)
-                print ("device gets on")
-                requests.get(url_parsed)
+                if device_status['status2'] == 'on':
+                    print ("device 2 is already on")
+                    engine.say("device 2 is already on")
+                    engine.runAndWait()
+                else :
+                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"on"
+                    requests.get(url_parsed) #print (url_parsed)
+                    ## check the status of all other device
+                    print (device_status) 
+                    print ("device gets on")
             elif re.search("device 2|device to" , str(device_operate)) and re.search("off" , str(device_operate)):
-                url_parsed =  fixed_url+"api_key="+response["api_key"]+"&"+"status2"+"="+"off"
-                requests.get(url_parsed)
-                print ("device gets off")
+                if device_status['status2'] == 'off':
+                    print ("device 2 is already off")
+                    engine.say("device 2 is already off")
+                    engine.runAndWait()
+                else :
+                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"off"
+                    requests.get(url_parsed) #print (url_parsed)
+                    ## check the status of all other device 
+                    print (device_status)
+                    print ("device gets off")
             elif re.search("logout" , str(device_operate)):
                 response["api_key"] = None
                 print ("Exiting the Smart Api")
@@ -273,8 +305,8 @@ class controls(SmartApi):
                                             engine.runAndWait()
                                         
                                         ## for another session
-                                        print ("do you want to continue , yes or no") 
-                                        engine.say("do you want to continue , yes or no")
+                                        print ("do you want to operate other devices , yes or no") 
+                                        engine.say("do you want to operate other devices , yes or no")
                                         engine.runAndWait()
                                         #>>>>>>>>>>>>>>>>>>>>>>>>>>>           user_input = SmartApi.myCommand(self)
                                         user_input =  raw_input("user_input = ")
