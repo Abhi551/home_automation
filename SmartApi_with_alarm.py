@@ -66,7 +66,7 @@ class SmartApi():
             self.myCommand()
             
 
-class controls():
+class controls(SmartApi):
 
     ## to access alarms and remainder 
     def alarms(self):
@@ -77,59 +77,73 @@ class controls():
         ## first parser is used but it doesn't give result always and it doesn't recognize the days of wee
         while 1:
             print ("typical statement of form , set alarm to 7:00 p.m. for Monday")
-            #alarm_set =  SmartApi.command(self)
-            alarm_set = raw_input("set alarm = ")
-            try:
-                date_time = parser.parse(alarm_set , fuzzy = True)
-                date_time = str(date_time)
+            alarm_set =  SmartApi.myCommand(self)
+            #alarm_set = raw_input("set alarm = ")
+            if re.search(r'alarm' , alarm_set) and (re.search(r'set' , alarm_set) or re.search(r'remove' , alarm_set)):
+                try:
+                    date_time = parser.parse(alarm_set , fuzzy = True)
+                    date_time = str(date_time)
 
-                date_time = date_time.split(" ")
-                ## user customized regex for recognition of day and time of alarm_set
-                if re.findall(r'monday' , alarm_set):
-                    day = re.findall(r'monday' , alarm_set)
-                if re.findall(r'tuesday' , alarm_set):
-                    day = re.findall(r'tuesday' , alarm_set)
-                if re.findall(r'wednesday' , alarm_set):
-                    day = re.findall(r'wednesday' , alarm_set)
-                if re.findall(r'thursday' , alarm_set):
-                    day = re.findall(r'thursday' , alarm_set)
-                if re.findall(r'friday' , alarm_set):
-                    day = re.findall(r'friday', alarm_set)
-                if re.findall(r'saturday' , alarm_set):
-                    day = re.findall(r'saturday' , alarm_set)
-                if re.findall(r'sunday' , alarm_set):
-                    day = re.findall(r'sunday' , alarm_set)
+                    date_time = date_time.split(" ")
+                    ## user customized regex for recognition of day and time of alarm_set
+                    if re.findall(r'monday' , alarm_set):
+                       alarm_day = re.findall(r'monday' , alarm_set)
+                    if re.findall(r'tuesday' , alarm_set):
+                       alarm_day = re.findall(r'tuesday' , alarm_set)
+                    if re.findall(r'wednesday' , alarm_set):
+                       alarm_day = re.findall(r'wednesday' , alarm_set)
+                    if re.findall(r'thursday' , alarm_set):
+                       alarm_day = re.findall(r'thursday' , alarm_set)
+                    if re.findall(r'friday' , alarm_set):
+                       alarm_day = re.findall(r'friday', alarm_set)
+                    if re.findall(r'saturday' , alarm_set):
+                       alarm_day = re.findall(r'saturday' , alarm_set)
+                    if re.findall(r'sunday' , alarm_set):
+                       alarm_day = re.findall(r'sunday' , alarm_set)
 
-                '''
-                time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
-                '''
-                week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
-                print ("time = %s" %(time))
-                print ("date_time = %s "%(date_time))
-                try :
-                    print ('day = %s' %(day))
-                except Exception as e:
-                    print ('day is not specified so by default current day is used')
-                    day = parser.parse(alarm_set , fuzzy = True).weekday()
-                    print ('day = %s' %week_days[day])
+                    '''
+                    time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
+                    '''
+                    week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
+                    alarm_time , alarm_date = date_time[1] , date_time[0]
+
+                    if re.findall(r'remove' , alarm_set):
+                        action = 'remove'
+                    else :
+                        action = 'set'
+
+                    ## thus 4 things are to be passed in the database 
+                    ## action , alarm_day , alarm_date , alarm_time
+                    print ("time = %s" %(alarm_time))
+                    print ("date = %s "%(alarm_date))
+                    try :
+                        print ('day = %s' %(alarm_day))
+                    except Exception as e:
+                        print ('day is not specified so by default current day is used')
+                        day = parser.parse(alarm_set , fuzzy = True).weekday()
+                        print ('day = %s' %week_days[day])
+                        alarm_day = week_days[day]
+                    print ("action = %s " %(action))
 
 
-                ## parse this into database  
-                #return (date_time , day , time)
-                engine.say("do you want to set another alarm yes or no")
-                engine.runAndWait()
+                    ## parse this into database  
+                    #return (date_time , day , time)
+                    engine.say("do you want to set another alarm yes or no")
+                    engine.runAndWait()
 
-                ## call the SmartApi()
-                #user_input = SmartApi.myCommand(self)
-
-                user_input = raw_input("do you want to set another alarm , yes or no ")
-                if re.search(r'no',user_input):
-                    return 1
-        
-            except Exception as e:
-                print (e)
-                print ("alarm set in wrong format")
+                    ## call the SmartApi()
+                    user_input = SmartApi.myCommand(self)
+                    #user_input = raw_input("do you want to set another alarm , yes or no \n")
+                    if re.search(r'no',user_input):
+                        return 1
             
+                except Exception as e:
+                    print (e)
+                    print ("alarm set in wrong format")
+            else :
+                print ("Try Again")
+                engine.say("Try Again")
+                engine.runAndWait()                
 
     ## lights function for accessing the lights 
     def lights(self):
