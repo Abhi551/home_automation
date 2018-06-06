@@ -306,17 +306,17 @@ class controls(SmartApi):
                 
                 #self.mail_id = SmartApi.myCommand(self)
                 self.mail_id = raw_input("mail_id = ")
-                ## taking the password for only 1 id , chetna agarwal
+                ## taking the password for only 1 id , 
                 ## that can be upgraded afterwards , for multiple users
 
                 ## to check the mail id of user if mail id matches then ask for password only
-                if self.mail_id == "chetna agarwal":
+                if self.mail_id == "xxxxxxxx":
                     ## taking password for the ids but only 3 attempts are allowed  
                     flag = 3
                     engine.say("enter your password")
                     engine.runAndWait()
                     password = raw_input("Enter your password = ")                  
-                    while re.search("chetna agarwal" , str(self.mail_id)):
+                    while re.search("xxxxxxx" , str(self.mail_id)):
                         ## if password is correct then ask for device operations (3 attempts)
                         if password == "xxxxx":
                             ## it can be reomved only if we call lights or alarm function after it  , user_log for login confirmation
@@ -325,7 +325,7 @@ class controls(SmartApi):
                             engine.say("you are logged in %s" %(self.mail_id))
                             engine.runAndWait()
 
-                            requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password)
+                            requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?XXXXXXXXXXXXXXXXXXXXXX"+password)
                             
                             ## checking the output of both json and text to get the api_key
                             print ("json output of the response \n %s"%(requests_out.json))
