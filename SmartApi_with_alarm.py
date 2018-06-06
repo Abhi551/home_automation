@@ -12,7 +12,7 @@ import ast
 import time 
 import sys
 
-
+from datetime import datetime
 from dateutil import parser
 from gtts import gTTS
 
@@ -71,10 +71,8 @@ class controls(SmartApi):
     ## to access alarms and remainder 
     def alarms(self):
 
-
         ## typical statement will be of form , set alarm to 7:00 p.m. for Monday
-        self.response = {}
-
+        self.response = {'api_key' : 'a1ebc37f43ee497ca453f84a9e9e7d11'}
         ## parser.parse is used but it doesn't give good result always
         while 1:
             ##http://codeglobal.in/home_automation1/fetchalarmdetails.php?api_key=x
@@ -90,6 +88,7 @@ class controls(SmartApi):
             
             if re.search(r'alarm' , alarm_set) and (re.search(r'set' , alarm_set) or re.search(r'remove' , alarm_set)):
                 date_time = str(parser.parse(alarm_set , fuzzy = True))
+                print (date_time)
                 date_time = date_time.split(" ")
 
                 ## user customized regex for recognition of day and time of alarm_set
@@ -122,16 +121,21 @@ class controls(SmartApi):
 
                 ## thus 4 things are to be passed in the database 
                 ## action , alarm_day , alarm_date , alarm_time
-                print ("time = %s" %(alarm_time))
-                print ("date = %s "%(alarm_date))
+                #print ("time = %s" %(alarm_time))
+                #print ("date = %s "%(alarm_date))
                 try :
                     print ('day = %s' %(alarm_day))
                 except Exception as e:
                     print ('day is not specified so by default current day is used')
                     day = parser.parse(alarm_set , fuzzy = True).weekday()
-                    print ('day = %s' %week_days[day])
+                    #print ('day = %s' %week_days[day])
                     alarm_day = week_days[day]
                 print ("mode = %s " %(mode))
+
+                ## conveting time to milliseconds 
+                dt = datetime.strptime("2018-06-06 09:38:42" , "%Y-%m-%d %H:%M:%S")
+                time_milli = time.mktime(dt.timetuple())*1000 + int(76)*10
+
                 alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time
                 
                 #print (alarm_url)
@@ -238,7 +242,7 @@ class controls(SmartApi):
             device_operate = raw_input("device_operate = ")
             print (str(device_operate))
             ## upgrade for all other devices 
-            device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api="+self.response['api_key'].text)
+            device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api="+self.response['api_key'])
             device_status = ast.literal_eval(device_status)['hardware'][0]
 
             if re.search("device 2|device to" , str(device_operate)) and re.search("on" , str(device_operate)):
