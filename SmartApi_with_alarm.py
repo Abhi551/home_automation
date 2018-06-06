@@ -21,7 +21,7 @@ voices = engine.getProperty("voices")
 engine.setProperty('voice' , voices[1].id)
 engine.setProperty('rate' , 150)
 
-##http://codeglobal.in/home_automation1/alarm.php?api_key=a1ebc37f43ee497ca453f84a9e9e7d11&mode=set&alarm_date=2018-06-11&alarm_time=19:00:00&alarm_day=monday
+##http://codeglobal.in/home_automation1/alarm.php?api_key=XXXXXXXXXXXXXXXXXXXXXX&mode=set&alarm_date=2018-06-11&alarm_time=19:00:00&alarm_day=monday
 url = "http://codeglobal.in/home_automation1/alarms.php?api_key=456dsfmdm455&mode=set&time=bsdh&hours="
 
 class SmartApi():
@@ -33,7 +33,6 @@ class SmartApi():
     def myCommand(self):
         "Takes the command from user through voice"
         ## function to be executed till internet connectivity is available again
-        #engine.say('I am ready for your command sir')
         r = sr.Recognizer()
         try :
             with sr.Microphone() as source:
@@ -49,13 +48,13 @@ class SmartApi():
             #loop back to continue to listen for commands if unrecognizable speech is received
                 except sr.UnknownValueError:
                     print("We couldn't understand your last command \nTry Again!")
-                    engine.say("We couldn't understand your last command Try Again!")
+                    engine.say("we couldn't understand your last command Try Again!")
                     engine.runAndWait()
                 ## recursion if no input is provided by the user 
                     command = self.myCommand();
                 except sr.RequestError as e:
                     print ("Could not request your results due to lost connectivity")
-                    engine.say("Could not request your results due to lost connectivity")
+                    engine.say("could not request your results due to lost connectivity")
                     engine.runAndWait()
                     self.myCommand()
                 except Exception as e :
@@ -72,100 +71,156 @@ class controls(SmartApi):
     ## to access alarms and remainder 
     def alarms(self):
 
+
         ## typical statement will be of form , set alarm to 7:00 p.m. for Monday
         self.response = {}
-        self.response['api_key'] = "a1ebc37f43ee497ca453f84a9e9e7d11"
-        ## first parser is used but it doesn't give result always and it doesn't recognize the days of wee
+
+        ## parser.parse is used but it doesn't give good result always
         while 1:
-            alarm_url = "http://codeglobal.in/home_automation1/alarm.php?"
-            print ("typical statement of form , set or remove alarm to 7:00 p.m. for Monday")
-            engine.say("typical statement of form , set or remove alarm to 7:00 p.m. for Monday")
-            engine.runAndWait()
+            ##http://codeglobal.in/home_automation1/fetchalarmdetails.php?api_key=x
+            fixed_fetch_url = "http://codeglobal.in/home_automation1/fetchalarmdetails.php?"
+            fixed_alarm_url = "http://codeglobal.in/home_automation1/alarm.php?"
+            print ("typical statement of form , set  alarm to 7:00 p.m. for Monday or remove alarm to 7:00 p.m. for Monday , to see exiting alarms say see my previous alarms")
+            #engine.say("typical statement of form , set  alarm to 7:00 p.m. for monday or remove alarm to 7:00 p.m. for monday")
+            #engine.runAndWait()
+
 
             #alarm_set =  SmartApi.myCommand(self)
             alarm_set = raw_input("set alarm = ")
+            
             if re.search(r'alarm' , alarm_set) and (re.search(r'set' , alarm_set) or re.search(r'remove' , alarm_set)):
+                date_time = str(parser.parse(alarm_set , fuzzy = True))
+                date_time = date_time.split(" ")
+
+                ## user customized regex for recognition of day and time of alarm_set
+                if re.findall(r'monday' , alarm_set):
+                   alarm_day = re.findall(r'monday' , alarm_set)[0]
+                if re.findall(r'tuesday' , alarm_set):
+                   alarm_day = re.findall(r'tuesday' , alarm_set)[0]
+                if re.findall(r'wednesday' , alarm_set):
+                   alarm_day = re.findall(r'wednesday' , alarm_set)[0]
+                if re.findall(r'thursday' , alarm_set):
+                   alarm_day = re.findall(r'thursday' , alarm_set)[0]
+                if re.findall(r'friday' , alarm_set):
+                   alarm_day = re.findall(r'friday', alarm_set)[0]
+                if re.findall(r'saturday' , alarm_set):
+                   alarm_day = re.findall(r'saturday' , alarm_set)[0]
+                if re.findall(r'sunday' , alarm_set):
+                   alarm_day = re.findall(r'sunday' , alarm_set)[0]
+
+                ## use of regex to find exact time 
+                '''
+                time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
+                '''
+                week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
+                alarm_time , alarm_date = date_time[1] , date_time[0]
+
+                if re.findall(r'remove' , alarm_set):
+                    mode = 'remove'
+                else :
+                    mode = 'set'
+
+                ## thus 4 things are to be passed in the database 
+                ## action , alarm_day , alarm_date , alarm_time
+                print ("time = %s" %(alarm_time))
+                print ("date = %s "%(alarm_date))
+                try :
+                    print ('day = %s' %(alarm_day))
+                except Exception as e:
+                    print ('day is not specified so by default current day is used')
+                    day = parser.parse(alarm_set , fuzzy = True).weekday()
+                    print ('day = %s' %week_days[day])
+                    alarm_day = week_days[day]
+                print ("mode = %s " %(mode))
+                alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time
+                
+                #print (alarm_url)
+                
                 try:
-                    date_time = parser.parse(alarm_set , fuzzy = True)
-                    date_time = str(date_time)
-
-                    date_time = date_time.split(" ")
-                    ## user customized regex for recognition of day and time of alarm_set
-                    if re.findall(r'monday' , alarm_set):
-                       alarm_day = re.findall(r'monday' , alarm_set)[0]
-                    if re.findall(r'tuesday' , alarm_set):
-                       alarm_day = re.findall(r'tuesday' , alarm_set)[0]
-                    if re.findall(r'wednesday' , alarm_set):
-                       alarm_day = re.findall(r'wednesday' , alarm_set)[0]
-                    if re.findall(r'thursday' , alarm_set):
-                       alarm_day = re.findall(r'thursday' , alarm_set)[0]
-                    if re.findall(r'friday' , alarm_set):
-                       alarm_day = re.findall(r'friday', alarm_set)[0]
-                    if re.findall(r'saturday' , alarm_set):
-                       alarm_day = re.findall(r'saturday' , alarm_set)[0]
-                    if re.findall(r'sunday' , alarm_set):
-                       alarm_day = re.findall(r'sunday' , alarm_set)[0]
-
-                    ## use of regex to find exact time 
-                    '''
-                    time = (re.findall(r' [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.| [0-1]?[0-9]:?.?[0-5][0-9].?p\.m\.|[0-1]?[0-9].?p\.m\ | [0-1]?[0-9].?a\.m\.', alarm_set ))
-                    '''
-                    week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
-                    alarm_time , alarm_date = date_time[1] , date_time[0]
-
-                    if re.findall(r'remove' , alarm_set):
-                        mode = 'remove'
-                    else :
-                        mode = 'set'
-
-                    ## thus 4 things are to be passed in the database 
-                    ## action , alarm_day , alarm_date , alarm_time
-                    print ("time = %s" %(alarm_time))
-                    print ("date = %s "%(alarm_date))
-                    try :
-                        print ('day = %s' %(alarm_day))
-                    except Exception as e:
-                        print ('day is not specified so by default current day is used')
-                        day = parser.parse(alarm_set , fuzzy = True).weekday()
-                        print ('day = %s' %week_days[day])
-                        alarm_day = week_days[day]
-                    print ("mode = %s " %(mode))
-                    alarm_url = alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time
-                    print (alarm_url)
                     r = requests.get(alarm_url)
                     output = ast.literal_eval(r.text)
                     if output['success'] == "1":
-                        print ("ok , alarm had been added")
-                        engine.say("ok , alarm had been added")
+                        print ("alarm had been added")
+                        engine.say("alarm had been added")
                         engine.runAndWait()
                     elif output['success'] == '-1':
-                        print ("ok , alarm already exists ")
-                        engine.say("ok , alarm already exists")
+                        print ("alarm already exists ")
+                        engine.say("alarm already exists")
                         engine.runAndWait()
                     elif output['success'] == "0":
-                        print ("ok , alarm had been removed")
-                        engine.say("ok , alarm had been removed")
+                        print ("alarm had been removed")
+                        engine.say("alarm had been removed")
                         engine.runAndWait()
-
-
-                    ## parse this into database  
-                    #return (date_time , day , time)
+                    elif output['success'] == "-2":
+                        print ("alarm doesn't exit " )
+                        engine.say("alarm doesn't exist")
+                        engine.runAndWait()
+                    else :
+                        print ("unrecognizable operations")
+                        engine.say("unrecognizable operations")
                     engine.say("do you want to set another alarm yes or no")
                     engine.runAndWait()
 
                     ## call the SmartApi()
                     #user_input = SmartApi.myCommand(self)
-                    user_input = raw_input("do you want to set another alarm , yes or no \n")
-                    if re.search(r'no',user_input):
-                        return 1
-            
-                except Exception as e:
-                    print (e)
-                    print ("alarm set in wrong format")
+                except requests.exceptions.Timeout as e:
+                    print ("Timeout ! Try Again")
+                    engine.say("timeout try again")
+                    engine.runAndWait()
+                    self.alarms()
+                except requests.exceptions.TooManyRedirects:
+                    print ("Too Many Requests")
+                    print ("Too Many Requests")
+                    engine.say("too Many requests")
+                    self.alarms()
+                except requests.exceptions.RequestException as e:
+                    print ("lost connectivity")
+                    engine.say("lost connectivity")
+                    engine.runAndWait()
+                    self.alarms()
+
+            elif re.search(r'previous' , alarm_set) and re.search(r'alarm' , alarm_set):
+                fetch_url =  fixed_fetch_url + "api_key="+self.response['api_key']
+                try:
+                    r = requests.get(fetch_url)
+                    alarm_status = r.text.encode("UTF8")[2:-1]
+                    alarm_status=list(ast.literal_eval(alarm_status))
+                    for status in alarm_status[1:]:
+                        result_status = "your alarm is on " + status['Day'] +  " at " + status['Time']
+                        print (result_status)
+                except requests.exceptions.Timeout:
+                    print ("Timeout ! Try Again")
+                    engine.say("timeout try again")
+                    engine.runAndWait()
+                    self.alarms()
+                except requests.exceptions.TooManyRedirects:
+                    print ("Too Many Requests")
+                    engine.say("too Many requests")
+                    engine.runAndWait()
+                    self.alarms()
+                except requests.exceptions.RequestException as e:
+                    print ("lost connectivity")
+                    engine.say("lost connectivity")
+                    engine.runAndWait()
+                    self.alarms()
+
+
             else :  
-                print ("Try Again")
-                engine.say("Try Again")
+                self.alarms()
+                print ("Wrong command , Try Again !")
+                engine.say("wrong command , try Again")
                 engine.runAndWait()                
+
+            while 1:
+                user_input = raw_input("do you want to set another alarm , yes or no \n")
+                if re.search(r'no' , user_input):
+                    return 1
+                elif re.search(r'yes' , user_input) :
+                    break
+                else :
+                    print ("Wrong Input , Try Again !")
+                    engine.say("rong input , try again")
+                    engine.runAndWait()
 
     ## lights function for accessing the lights 
     def lights(self):
@@ -182,11 +237,10 @@ class controls(SmartApi):
             #>>>>>>device_operate = SmartApi.myCommand(self)
             device_operate = raw_input("device_operate = ")
             print (str(device_operate))
-            #requests.get("http://codeglobal.in/home_automation1/update.php?api_key=a1ebc37f43ee497ca453f84a9e9e7d11&status2=off
             ## upgrade for all other devices 
-            device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11").text)
+            device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api="+self.response['api_key'].text)
             device_status = ast.literal_eval(device_status)['hardware'][0]
-            response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"}
+
             if re.search("device 2|device to" , str(device_operate)) and re.search("on" , str(device_operate)):
                 if device_status['status2'] == 'on':
                     print ("device 2 is already on")
@@ -212,7 +266,7 @@ class controls(SmartApi):
             elif re.search("logout" , str(device_operate)):
                 response["api_key"] = None
                 print ("Exiting the Smart Api")
-                engine.say("Exiting the Smart Api")
+                engine.say("exiting the smart api")
                 engine.runAndWait()
                 sys.exit()
             elif re.search('go' , str(device_operate)) and re.search('back', str(device_operate)):
@@ -259,19 +313,19 @@ class controls(SmartApi):
                 if self.mail_id == "chetna agarwal":
                     ## taking password for the ids but only 3 attempts are allowed  
                     flag = 3
-                    engine.say("Enter your password")
+                    engine.say("enter your password")
                     engine.runAndWait()
                     password = raw_input("Enter your password = ")                  
                     while re.search("chetna agarwal" , str(self.mail_id)):
                         ## if password is correct then ask for device operations (3 attempts)
-                        if password == "chetna":
+                        if password == "xxxxx":
                             ## it can be reomved only if we call lights or alarm function after it  , user_log for login confirmation
                             ## confirming the log in by voice output
                             print ("You are logged in %s" %(self.mail_id))
-                            engine.say("You are logged in %s" %(self.mail_id))
+                            engine.say("you are logged in %s" %(self.mail_id))
                             engine.runAndWait()
 
-                            requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna")
+                            requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password)
                             
                             ## checking the output of both json and text to get the api_key
                             print ("json output of the response \n %s"%(requests_out.json))
@@ -301,7 +355,7 @@ class controls(SmartApi):
                                             self.alarms()
                                         else :
                                             print ("I cannot control %s " %self.device_operate)
-                                            engine.say("I cannot control %s " %self.device_operate)
+                                            engine.say("i cannot control %s " %self.device_operate)
                                             engine.runAndWait()
                                         
                                         ## for another session
@@ -324,19 +378,19 @@ class controls(SmartApi):
                         elif flag > 0:
                         ## for wrong attempts
                             flag =  flag - 1
-                            engine.say("Enter your password")
+                            engine.say("enter your password")
                             engine.runAndWait()
                             password = raw_input("Enter your password = ") 
                             
                         else :
                             print ("Exceeded the number of attempts , Try Again")
-                            engine.say("Exceeded the number of attempts , Try Again")
+                            engine.say("exceeded the number of attempts , try again")
                             engine.runAndWait()
                             sys.exit(0)
             else :
                 print ("wrong attempts exceeded")
                 print ("Exiting the program ")
-                engine.say("Exiting the program")
+                engine.say("exiting the program")
                 engine.runAndWait()
                 sys.exit()
 
@@ -347,12 +401,12 @@ class controls(SmartApi):
             
         elif re.search(r'exit' , extract_command):
             print ("Exiting the console")
-            engine.say("Exiting the console")
+            engine.say("exiting the console")
             engine.runAndWait()
             sys.exit()
         else :
             print ("Unexpected command given by user ")
-            engine.say("Unexpected command given by user")
+            engine.say("unexpected command given by user")
             engine.runAndWait()     
             self.commands()       
 ## creating the object 
