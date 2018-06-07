@@ -138,7 +138,6 @@ class controls(SmartApi):
                 date_time = str(parser.parse(alarm_mode , fuzzy = True))
                 dt = datetime.strptime(str(date_time) , "%Y-%m-%d %H:%M:%S")
                 time_milli = time.mktime(dt.timetuple())*1000 + int(76)*10
-                '''
                 if time_milli < time.time()*1000:
                     print ("Time already passed")
                     #engine.say("time already passed")
@@ -146,7 +145,6 @@ class controls(SmartApi):
                     self.alarms()
                 else :
                     pass
-                '''
                 alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)
                 print (alarm_url)
                 #print ("mode = %s " %(mode))
@@ -169,7 +167,7 @@ class controls(SmartApi):
                         print ("alarm had been removed")
                         engine.say("alarm had been removed")
                         engine.runAndWait()
-                    elif output['success'] == "-2":
+                    elif output['success'] == "2":
                         print ("alarm doesn't exit " )
                         engine.say("alarm doesn't exist")
                         engine.runAndWait()
