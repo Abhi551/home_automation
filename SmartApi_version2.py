@@ -139,13 +139,11 @@ class controls(SmartApi):
                 dt = datetime.strptime(str(date_time) , "%Y-%m-%d %H:%M:%S")
                 time_milli = time.mktime(dt.timetuple())*1000 + int(76)*10                
                 alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)
-                '''
                 print ("mode = %s " %(mode))                
                 print ("time = %s" %(alarm_time))
                 print ("date = %s "%(alarm_date)) 
                 print ("alarm_day = %s"%(alarm_day))               
                 print (alarm_url)
-                '''
 
                 try:
                     r = requests.get(alarm_url)
@@ -564,99 +562,7 @@ class controls(SmartApi):
             engine.runAndWait()            
 
 ## for simple commands using speech
-class assistant(SmartApi):
 
-    def reddit(self):
-        command = SmartApi.myCommand(self)
-        if 'open reddit' in command:
-            reg_ex = re.search('open reddit (.*)', command)
-            url = 'https://www.reddit.com/'
-            if reg_ex:
-                subreddit = reg_ex.group(1)
-                url = url + 'r/' + subreddit
-            webbrowser.open(url)
-            print('Done!')
-            engine.say("Done")
-            engine.runAndWait()
-    def talkback(self):
-        command =SmartApi.myCommand(self)
-        if "how are you" in command:
-            engine.say('i am fine, what about you')
-            engine.runAndWait()
-        elif "tell me about your features" in command:
-            engine.say('i am specially designed as a personal home assistant, i can'
-                       'switch on and off Lights, fans, tv, air conditioners, set alarm and reminder')
-            engine.runAndWait()
-        elif "who are you" in command:
-            engine.say('i am a smart intelligence system, designed by satyam sir')
-            engine.runAndWait()
-        elif 'open website' in command:
-            reg_ex = re.search('open website (.+)', command)
-            if reg_ex:
-                domain = reg_ex.group(1)
-                url = 'https://www.' + domain
-                try :
-                    webbrowser.open(url)
-                    print('Done!')
-                    engine.say("Done")
-                    engine.runAndWait()
-                except Exception as e:
-                    print (e)
-            else:
-                pass
-
-        elif 'what are you doing' in command:
-            engine.say('Just doing my thing')
-            engine.runAndWait()
-        elif 'joke' in command:
-            res = requests.get(
-                    'https://icanhazdadjoke.com/',
-                    headers={"Accept":"application/json"}
-                    )
-            if res.status_code == requests.codes.ok:
-                engine.say(str(res.json()['joke']))
-                engine.runAndWait()
-            else:
-                engine.say('oops!I ran out of jokes')
-                engine.runAndWait()
-
-    def weather(self):
-        command = SmartApi.myCommand(self)
-        if 'weather in' in command:
-            reg_ex = re.search('weather in (.*)', command)
-            if reg_ex:
-                city = reg_ex.group(1)
-                weather = Weather()
-                location = weather.lookup_by_location(city)
-                condition = location.condition()
-                engine.say('The Current weather in %s is %s The tempeture is %.1f degree' % (city, condition.text(), (int(condition.temp())-32)/1.8))
-                engine.runAndWait()
-            
-        elif 'weather forecast in' in command:
-            reg_ex = re.search('weather forecast in (.*)', command)
-            if reg_ex:
-                city = reg_ex.group(1)
-                weather = Weather()
-                location = weather.lookup_by_location(city)
-                forecasts = location.forecast()
-                for i in range(0,3):
-                    engine.say('On %s will it %s. The maximum temperture will be %.1f degree.'
-                             'The lowest temperature will be %.1f degrees.' % (forecasts[i].date(), forecasts[i].text(), (int(forecasts[i].high())-32)/1.8, (int(forecasts[i].low())-32)/1.8))
-                    engine.runAndWait()
-
-            else:
-                engine.say('I don\'t know what you mean!')
-                engine.runAndWait()
-
-    def search(self):
-        command = SmartApi.myCommand(self)
-        if 'who is' in command:
-            command = command.split()
-            name = command[2]
-            print("Hold on satyam, I will tell you who " + name + " is.")
-            sam= wikipedia.summary(name, sentences=3)
-            engine.say(sam)
-            engine.runAndWait()
     
 
 ## creating the object 
