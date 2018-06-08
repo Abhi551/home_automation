@@ -1,1 +1,2 @@
-#home_automation this project includes the working program files to operate on home controlled system created by co-workers using aurdino system 
+#home_automation this project includes the working program files to operate on home controlled system created by co-workers using aurdino system
+we have our main file which is going to run all the modules namely 1. SmartApi 2. Facial 3. Sentiment Analysis , all these three will be combined to work in home automation , a small prototype of IOT that is already implemented during the period of intern.
