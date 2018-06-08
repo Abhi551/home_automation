@@ -16,12 +16,12 @@ import datetime
 from datetime import datetime
 from dateutil import parser
 from gtts import gTTS
-'''
+
 engine =  pyttsx.init()
 voices = engine.getProperty("voices")
 engine.setProperty('voice' , voices[1].id)
 engine.setProperty('rate' , 150)
-'''
+
 ##http://codeglobal.in/home_automation1/alarm.php?api_key=XXXXXXXXXXXXXXXXXXXXXX&mode=set&alarm_date=2018-06-11&alarm_time=19:00:00&alarm_day=monday
 
 class SmartApi_try():
@@ -31,7 +31,8 @@ class SmartApi_try():
         #print (url)
         try:
             r = requests.get(url)
-            return r.text
+            req_result = r
+            return (r.text , req_result)
         except requests.exceptions.Timeout as e:
             print ("Timeout ! Try Again")
             #engine.say("timeout try again")
@@ -92,7 +93,7 @@ class controls(SmartApi_try):
 
     ## to access alarms and remainder 
     def alarms(self , response):
-        self.response = {'api_key':"a1ebc37f43ee497ca453f84a9e9e7d11"}
+        self.response = response
         while 1:
             ##http://codeglobal.in/home_automation1/fetchalarmdetails.php?api_key=x
             fixed_fetch_url = "http://codeglobal.in/home_automation1/fetchalarmdetails.php?"
@@ -170,7 +171,7 @@ class controls(SmartApi_try):
                 #print ("milliseconds = ")
                 #print (time_milli)
 
-                r = SmartApi_try.valid_url(self , alarm_url)
+                r , json = SmartApi_try.valid_url(self , alarm_url)
                 output = ast.literal_eval(r)
                 if output['success'] == "1":
                     print ("alarm had been added")
@@ -196,7 +197,7 @@ class controls(SmartApi_try):
             elif re.search(r'previous' , alarm_mode) and re.search(r'alarm' , alarm_mode):
                 fetch_url =  fixed_fetch_url + "api_key="+self.response['api_key']
                 #print (fetch_url)
-                r = SmartApi_try.valid_url(self , fetch_url)
+                r , json = SmartApi_try.valid_url(self , fetch_url)
                 #print (r)
                 #print (r.text)
                 if not(re.search(r'Date' , str(r))):
@@ -235,10 +236,10 @@ class controls(SmartApi_try):
                     #engine.say("wrong input , try again")
                     #engine.runAndWait()
     ## lights function for accessing the lights 
-    def lights(self):
+    def lights(self , response):
 
         fixed_url = "http://codeglobal.in/home_automation1/update.php?"
-        self.response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"}
+        self.response = response
         ## working on device 2 only
         ## checking the device input by user 
         while 1 :
@@ -249,7 +250,7 @@ class controls(SmartApi_try):
             device_operate = raw_input("device_operate = ")
             ## upgrade for all other devices 
             url = "http://codeglobal.in/home_automation1/read_all.php?api="+self.response['api_key']
-            r = SmartApi_try.valid_url(self , url)
+            r , json = SmartApi_try.valid_url(self , url)
             device_status = r
             device_status = ast.literal_eval(device_status)['hardware'][0]
             #print ("the status of device_status is")
