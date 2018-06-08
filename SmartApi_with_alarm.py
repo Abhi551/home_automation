@@ -87,7 +87,7 @@ class controls(SmartApi):
             
             if re.search(r'alarm' , alarm_mode) and (re.search(r'set' , alarm_mode) or re.search(r'remove' , alarm_mode)):
                 date_time = str(parser.parse(alarm_mode , fuzzy = True))
-                print (date_time)
+                #print (date_time)
                 date_time = date_time.split(" ")
 
                 ## user customized regex for recognition of day and time of alarm_set
@@ -146,7 +146,7 @@ class controls(SmartApi):
                 else :
                     pass
                 alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)
-                print (alarm_url)
+                #print (alarm_url)
                 #print ("mode = %s " %(mode))
                 #print ("milliseconds = ")
                 #print (time_milli)
@@ -195,7 +195,7 @@ class controls(SmartApi):
                     self.alarms()
             elif re.search(r'previous' , alarm_mode) and re.search(r'alarm' , alarm_mode):
                 fetch_url =  fixed_fetch_url + "api_key="+self.response['api_key']
-                print (fetch_url)
+                #print (fetch_url)
                 try:
                     r = requests.get(fetch_url)
                     #print (r.text)
@@ -241,7 +241,7 @@ class controls(SmartApi):
                 #user_input = SmartApi.myCommand(self)
                 user_input = raw_input("do you want to set another alarm , yes or no \n")
                 ## check sometime gives wrong input 
-                print ("user_input = " ,user_input)
+                #print ("user_input = " ,user_input)
                 if re.search(r'no' , user_input) or user_input == "no":
                     return 1
                 elif re.search(r'yes' , user_input) or  user_input == "yes":
