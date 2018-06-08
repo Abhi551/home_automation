@@ -13,20 +13,21 @@ import ast
 import time 
 import sys
 import dateutil
+import textblob
 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from datetime import datetime
 from dateutil import parser
 from gtts import gTTS
+#from weather import Weather
 
 ## play songs according to mood 
-# angry , sad , happy , disgusted , nuetral , feared , surprised
-#from weather import Weather
+## angry , sad , happy , disgusted , nuetral , feared , surprised
 ## for speech to speech interaction
+
 class SmartApi():
     def __init__(self):
         self.fixed_url = "http://codeglobal.in/home_automation1/update.php?"
-
-
     ## takes the command from user through Microphone
     def myCommand(self):
         "Takes the command from user through voice"
@@ -64,11 +65,15 @@ class SmartApi():
             print ("Unknown Issues executed")
             print (e)
             self.myCommand()
-
 class assistant(SmartApi):
     def talkback(self):
         #command =SmartApi.myCommand(self)
         while 1:
+            ## creates an analyser
+            ## run the analyser on answers given by the user 
+            ## 
+            analyser = SentimentIntensityAnalyzer()
+
             command = raw_input("chat command =")
             if "how are you" in command:
                 print ('i am fine what about you')
@@ -113,7 +118,6 @@ class assistant(SmartApi):
                     print ('oops!I ran out of jokes')
                     #engine.say('oops!I ran out of jokes')
                     #engine.runAndWait()
-
     def weather(self):
         #command = SmartApi.myCommand(self)
         command = raw_input("command = ")
@@ -142,17 +146,14 @@ class assistant(SmartApi):
                 pass
                 #engine.say('I don\'t know what you mean!')
                 #engine.runAndWait()
-
-    def search(self):
-        command = SmartApi.myCommand(self)
-        if 'who is' in command:
-            command = command.split()
-            name = command[2]
-            print("Hold on satyam, I will tell you who " + name + " is.")
-            sam= wikipedia.summary(name, sentences=3)
-            #engine.say(sam)
-            #engine.runAndWait()
-
+    def search(self , command):
+        ##command = SmartApi.myCommand(self)
+        command = command.split()
+        name = command[2]
+        print("Hold on satyam, I will tell you who " + name + " is.")
+        summary = wikipedia.summary(name, sentences=3)
+        #engine.say(summary)
+        #engine.runAndWait()
 if __name__ == '__main__':
     assistant_obj = assistant()
     #command = SmartApi.myCommand(self)
@@ -161,6 +162,5 @@ if __name__ == '__main__':
     ## this should be in the beggining of the command 
     if 'chat' in new_command :
         assistant_obj.talkback()
-
-
-
+    elif 'who is 'in new_command :
+        assistant_obj.search(new_command)
