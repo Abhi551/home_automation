@@ -157,41 +157,40 @@ class controls(SmartApi):
                     output = ast.literal_eval(r.text)
                     if output['success'] == "1":
                         print ("alarm had been added")
-                        engine.say("alarm had been added")
-                        engine.runAndWait()
+                        #engine.say("alarm had been added")
+                        #engine.runAndWait()
                     elif output['success'] == '-1':
                         print ("alarm already exists ")
-                        engine.say("alarm already exists")
-                        engine.runAndWait()
+                        #engine.say("alarm already exists")
+                        #engine.runAndWait()
                     elif output['success'] == "0":
                         print ("alarm had been removed")
-                        engine.say("alarm had been removed")
-                        engine.runAndWait()
+                        #engine.say("alarm had been removed")
+                        #engine.runAndWait()
                     elif output['success'] == "2":
                         print ("alarm doesn't exit " )
-                        engine.say("alarm doesn't exist")
-                        engine.runAndWait()
+                        #engine.say("alarm doesn't exist")
+                        #engine.runAndWait()
                     else :
                         print ("unrecognizable operations")
-                        engine.say("unrecognizable operations")
-                    engine.say("do you want to set another alarm yes or no")
-                    engine.runAndWait()
-
+                        #engine.say("unrecognizable operations")
+                        #engine.runAndWait()
 
                 except requests.exceptions.Timeout as e:
                     print ("Timeout ! Try Again")
-                    engine.say("timeout try again")
-                    engine.runAndWait()
+                    #engine.say("timeout try again")
+                    #engine.runAndWait()
                     self.alarms()
                 except requests.exceptions.TooManyRedirects:
                     print ("Too Many Requests")
                     print ("Too Many Requests")
-                    engine.say("too Many requests")
+                    #engine.say("too Many requests")
+                    #engine.runAndWait()
                     self.alarms()
                 except requests.exceptions.RequestException as e:
                     print ("lost connectivity")
-                    engine.say("lost connectivity")
-                    engine.runAndWait()
+                    #engine.say("lost connectivity")
+                    #engine.runAndWait()
                     self.alarms()
             elif re.search(r'previous' , alarm_mode) and re.search(r'alarm' , alarm_mode):
                 fetch_url =  fixed_fetch_url + "api_key="+self.response['api_key']
@@ -216,30 +215,31 @@ class controls(SmartApi):
 
                 except requests.exceptions.Timeout:
                     print ("Timeout ! Try Again")
-                    engine.say("timeout try again")
-                    engine.runAndWait()
+                    #engine.say("timeout try again")
+                    #engine.runAndWait()
                     self.alarms()
                 except requests.exceptions.TooManyRedirects:
                     print ("Too Many Requests")
-                    engine.say("too Many requests")
-                    engine.runAndWait()
+                    #engine.say("too Many requests")
+                    #engine.runAndWait()
                     self.alarms()
                 except requests.exceptions.RequestException as e:
                     print ("lost connectivity")
-                    engine.say("lost connectivity")
-                    engine.runAndWait()
+                    #engine.say("lost connectivity")
+                    #engine.runAndWait()
                     self.alarms()
 
             else :
                 print ("Wrong command , Try Again !")
-                engine.say("wrong command , try Again")
-                engine.runAndWait()             
+                #engine.say("wrong command , try Again")
+                #engine.runAndWait()             
                 self.alarms()   
             while 1:
                 ## call the SmartApi()
-
-                #user_input = SmartApi.myCommand(self)
                 user_input = raw_input("do you want to set another alarm , yes or no \n")
+                #engine.say("do you want to set another alarm yes or no")
+                #engine.runAndWait()
+                #user_input = SmartApi.myCommand(self)
                 ## check sometime gives wrong input 
                 #print ("user_input = " ,user_input)
                 if re.search(r'no' , user_input) or user_input == "no":
@@ -248,8 +248,8 @@ class controls(SmartApi):
                     break
                 else :
                     print ("Wrong Input , Try Again !")
-                    engine.say("rong input , try again")
-                    engine.runAndWait()
+                    #engine.say("wrong input , try again")
+                    #engine.runAndWait()
     ## lights function for accessing the lights 
     def lights(self):
 
@@ -310,9 +310,7 @@ class controls(SmartApi):
         ## call the function of base class for taking the input command through speech
 
         print ("1.to control devices please login ! , say home automation login \nto exit the console say exit")
-        engine.say("to control devices please login !") 
-        engine.say("for login , say home automation login")
-        engine.say("to exit the console say exit")
+        engine.say("to control devices please login ! for login , say home automation login to exit the console say exit")
         engine.runAndWait()
 
         #>>>> extract_command = SmartApi.myCommand(self)
