@@ -566,9 +566,9 @@ class controls(SmartApi):
     
 
 ## creating the object 
-obj_SmartApi = SmartApi()      
-#x = obj_SmartApi.myCommand()
-obj_controls =  controls()
-#obj_controls.commands()
-#obj_controls.alarms()
-obj_controls.lights()
+##obj_SmartApi = SmartApi()      
+##x = obj_SmartApi.myCommand()
+##obj_controls =  controls()
+##obj_controls.commands()
+##obj_controls.alarms()
+##obj_controls.lights()
