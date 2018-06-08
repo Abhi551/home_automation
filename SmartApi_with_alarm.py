@@ -437,9 +437,8 @@ class controls(SmartApi):
             engine.runAndWait()     
             self.commands()       
 ## creating the object 
-#obj_SmartApi = SmartApi()      
-
+##obj_SmartApi = SmartApi()      
 obj_controls = controls()
 obj_controls.alarms()
-#obj_controls.commands()
-obj_controls.lights()
+##obj_controls.commands()
+##obj_controls.lights()
