@@ -48,69 +48,48 @@ class SmartApi():
             print ("Unknown Issues executed")
             print (e)
             self.myCommand()
-    def valid_func(self , password , ):
-    	try:
-    		## run function from try2 file
-            requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password)
-           	requests_out =      
-            ##print ("json output of the response \n %s"%(requests_out.json))
-          	## only if 200 recieved  
-            if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
-                print ("OK")
-                while 1:
-                    response = ast.literal_eval(requests_out.text)
-                    user_input = 'yes'
-                    while (re.search(r'yes',user_input)):
-                        ## which device to operate by user  
-                        print ("what do you want to control \n1. alarm  \n2. lights")
-                        #engine.say("choose one of them what do you want to control alarm or lights")
-                        #engine.runAndWait()                                             
-                        ##device_operate = SmartApi.myCommand(self)
-                        device_operate = raw_input("device operate = ")
-                        print (device_operate)
-                        if re.search(r'lights|light' , device_operate) :
-                            obj_controls.lights(response)
-                        elif re.search(r'alarm' , device_operate):
-                            obj_controls.alarms(response)
-                        else :
-                            print ("I cannot control %s " %device_operate)
-                            engine.say("i cannot control %s " %device_operate)
-                            engine.runAndWait()
-                        
-                        ## for another session
-                        print ("do you want to operate other devices , yes or no") 
-                        #engine.say("do you want to operate other devices , yes or no")
-                        #engine.runAndWait()
-                        #user_input = SmartApi.myCommand(self)
-                        user_input =  raw_input("user_input = ")
-                        if re.search(r'no' , user_input) or re.search(r'logout',  user_input):
-                            print ("logging out of system")
-                            engine.say("logging out of system")
-                            engine.runAndWait()
-                            response['api_key'] = "0"
-                            print ("call commands function")
-                            main()
-                        else :
-                            pass
-        except requests.exceptions.Timeout as e:
-            print ("Timeout ! Try Again")
-            engine.say("timeout try again")
-            engine.runAndWait()
-            self.valid_func()
-        except requests.exceptions.TooManyRedirects:
-            print ("Too Many Requests")
-            print ("Too Many Requests")
-            engine.say("too Many requests")
-            engine.runAndWait()
-            self.valid_func()
-        except requests.exceptions.RequestException as e:
-            print ("lost connectivity")
-            engine.say("lost connectivity")
-            engine.runAndWait()
-            self.valid_func
-
-
-
+    def valid_func(self , password ):
+    	## run function from try2 file
+       	r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password) 
+      	
+        ## only if 200 recieved  
+        if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
+            print ("OK")
+            while 1:
+                response = ast.literal_eval(requests_out.text)
+                user_input = 'yes'
+                while (re.search(r'yes',user_input)):
+                    ## which device to operate by user  
+                    print ("what do you want to control \n1. alarm  \n2. lights")
+                    #engine.say("choose one of them what do you want to control alarm or lights")
+                    #engine.runAndWait()                                             
+                    ##device_operate = SmartApi.myCommand(self)
+                    device_operate = raw_input("device operate = ")
+                    print (device_operate)
+                    if re.search(r'lights|light' , device_operate) :
+                        obj_controls.lights(response)
+                    elif re.search(r'alarm' , device_operate):
+                        obj_controls.alarms(response)
+                    else :
+                        print ("I cannot control %s " %device_operate)
+                        engine.say("i cannot control %s " %device_operate)
+                        engine.runAndWait()
+                    
+                    ## for another session
+                    print ("do you want to operate other devices , yes or no") 
+                    #engine.say("do you want to operate other devices , yes or no")
+                    #engine.runAndWait()
+                    #user_input = SmartApi.myCommand(self)
+                    user_input =  raw_input("user_input = ")
+                    if re.search(r'no' , user_input) or re.search(r'logout',  user_input):
+                        print ("logging out of system")
+                        engine.say("logging out of system")
+                        engine.runAndWait()
+                        response['api_key'] = "0"
+                        print ("call commands function")
+                        main()
+                    else :
+                        pass
 
 ## might work on controlling the objects of SmartApi_version2 from here 
 ## other modules of facial recognition and sentiment analysis will also be controlled from here only 
@@ -201,7 +180,9 @@ if __name__ == "__main__":
 	engine.setProperty('voice', voices[1].id)
 	engine.setProperty('rate', 150)
 	
-	## calling the objects of SmartApi_version2 module
+    ## making the objects from the current module of SmartApi 
+	obj_SmartApi = SmartApi()
+    ## making the objects of SmartApi_version2 module
 	obj_controls = try2.controls()
-	obj_SmartApi_try = SmartApi_try()
+	obj_SmartApi_try = try2.SmartApi_try()
 	main()
