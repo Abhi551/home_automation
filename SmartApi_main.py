@@ -11,7 +11,8 @@ import sys
 from statistics import mode
 #import recognition
 #import face_recognition
-import try2
+#import SmartApi_with_alarm2
+import SmartApi_version3
 
 ## import other modules also
 class SmartApi():
@@ -49,7 +50,7 @@ class SmartApi():
             print (e)
             self.myCommand()
     def valid_func(self , password ):
-    	## run function from try2 file
+    	## run function from SmartApi_with_alarm2/SmartApi_version3 file
        	r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password) 
       	
         ## only if 200 recieved  
@@ -113,7 +114,6 @@ def main():
     	#engine.runAndWait()
     	#sys.exit()
 
-    ## this loop works fine and returns only expected value
     if re.search(r"home automation" , extract_command) and re.search(r"login" , extract_command) :
         ## once login and password are it should be in infinte loop 
         ## only 3 attempts are allowed for mail_id input
@@ -183,6 +183,6 @@ if __name__ == "__main__":
     ## making the objects from the current module of SmartApi 
 	obj_SmartApi = SmartApi()
     ## making the objects of SmartApi_version2 module
-	obj_controls = try2.controls()
-	obj_SmartApi_try = try2.SmartApi_try()
+	obj_controls = SmartApi_version3.controls()
+	obj_SmartApi_try = SmartApi_version3.SmartApi_try()
 	main()
