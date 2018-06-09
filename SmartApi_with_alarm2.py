@@ -93,7 +93,6 @@ class controls(SmartApi_try):
 
     ## to access alarms and remainder 
     def alarms(self , response):
-        self.response = response
         while 1:
             ##http://codeglobal.in/home_automation1/fetchalarmdetails.php?api_key=x
             fixed_fetch_url = "http://codeglobal.in/home_automation1/fetchalarmdetails.php?"
@@ -165,7 +164,7 @@ class controls(SmartApi_try):
                     self.alarms(12)
                 else :
                     pass
-                alarm_url = fixed_alarm_url + 'api_key='+self.response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)
+                alarm_url = fixed_alarm_url + 'api_key='+response['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)
                 #print (alarm_url)
                 #print ("mode = %s " %(mode))
                 #print ("milliseconds = ")
@@ -195,7 +194,7 @@ class controls(SmartApi_try):
                     #engine.runAndWait()
 
             elif re.search(r'previous' , alarm_mode) and re.search(r'alarm' , alarm_mode):
-                fetch_url =  fixed_fetch_url + "api_key="+self.response['api_key']
+                fetch_url =  fixed_fetch_url + "api_key="+response['api_key']
                 #print (fetch_url)
                 r , json = SmartApi_try.valid_url(self , fetch_url)
                 #print (r)
@@ -237,11 +236,8 @@ class controls(SmartApi_try):
                     #engine.runAndWait()
     ## lights function for accessing the lights 
     def lights(self , response):
-
         fixed_url = "http://codeglobal.in/home_automation1/update.php?"
-        self.response = response
-        ## working on device 2 only
-        ## checking the device input by user 
+        ## working on device 2 only 
         while 1 :
             print ("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back and for logout say logout" )
             #engine.say("which light you want to turn on or off ,say device 2 on or device 2 off , to enter main console say go back and for logout say logout")
@@ -249,7 +245,7 @@ class controls(SmartApi_try):
             #device_operate = SmartApi_try.myCommand(self)
             device_operate = raw_input("device_operate = ")
             ## upgrade for all other devices 
-            url = "http://codeglobal.in/home_automation1/read_all.php?api="+self.response['api_key']
+            url = "http://codeglobal.in/home_automation1/read_all.php?api="+response['api_key']
             r , json = SmartApi_try.valid_url(self , url)
             device_status = r
             device_status = ast.literal_eval(device_status)['hardware'][0]
@@ -262,7 +258,7 @@ class controls(SmartApi_try):
                     #engine.say("device 2 is already on")
                     #engine.runAndWait()
                 else :
-                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"on"
+                    url_parsed =  fixed_url+"api_key="+response["api_key"]+"&"+"status2"+"="+"on"
                     SmartApi_try.valid_url(self , url_parsed) #print (url_parsed)
                     ## check the status of all other device
                     #print (device_status) 
@@ -273,13 +269,13 @@ class controls(SmartApi_try):
                     engine.say("device 2 is already off")
                     engine.runAndWait()
                 else :
-                    url_parsed =  fixed_url+"api_key="+self.response["api_key"]+"&"+"status2"+"="+"off"
+                    url_parsed =  fixed_url+"api_key="+response["api_key"]+"&"+"status2"+"="+"off"
                     SmartApi_try.valid_url(self , url_parsed) #print (url_parsed)
                     ## check the status of all other device 
                     #print (device_status)
                     print ("device is off now")
-            elif re.search(r"logout" , str(device_operate)):
-                self.response["api_key"] = None
+            elif re.search(r"logout|log out" , str(device_operate)):
+                response["api_key"] = None
                 print ("Exiting the Smart Api")
                 engine.say("exiting the smart api")
                 engine.runAndWait()
@@ -288,7 +284,7 @@ class controls(SmartApi_try):
                 return 1
             else :
                 print ("nothing fetched")
-                self.lights()
+                self.lights(response)
 ## creating the object 
 ##obj_SmartApi_try = SmartApi_try()      
 #obj_controls = controls()
