@@ -96,12 +96,10 @@ class SmartApi():
 ## other modules of facial recognition and sentiment analysis will also be controlled from here only 
 
 def main():
-    #obj_controls = SmartApi_with_alarm.controls()
-    #obj_controls.alarms()
-    
+
     ## run facial recognition module here 
     ## tells whether a person is stranger or authorized
-   # name = recognition.face()
+    #name = recognition.face()
     name = ""
     if name == 'Stranger':
         print ("you are unauthorized person")
