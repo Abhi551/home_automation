@@ -8,7 +8,7 @@ import ast
 import time 
 import sys
 
-from statistics import mode
+#from statistics import mode
 #import recognition
 #import face_recognition
 #import SmartApi_with_alarm2
@@ -20,18 +20,20 @@ class SmartApi():
     def myCommand(self):
         ## function to be executed till internet connectivity is available again
         r = sr.Recognizer()
+        r.dynamic_energy_threshold = False
         try :
             with sr.Microphone() as source:
                 print('Ready...')
                 r.pause_threshold = 1
                 r.adjust_for_ambient_noise(source, duration=1)
                 print("Speak")
-                audio = r.listen(source)
+ 
+                audio = r.listen(source , timeout = 5.0)               
                 try:
                     command = r.recognize_google(audio).lower()
                     print('You said: ' + command + '\n')
                     return (str(command))
-            	#loop back to continue to listen for commands if unrecognizable speech is received
+                #loop back to continue to listen for commands if unrecognizable speech is received
                 except sr.UnknownValueError:
                     print("We couldn't understand your last command \nTry Again!")
                     engine.say("we couldn't understand your last command Try Again!")
@@ -49,27 +51,26 @@ class SmartApi():
             print ("Unknown Issues executed")
             print (e)
             self.myCommand()
-    def valid_func(self , password ):
-    	## run function from SmartApi_with_alarm2/SmartApi_version3 file
-       	r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password) 
-      	
-        ## only if 200 recieved  
+    def valid_func(self ):
+        ## run function from SmartApi_with_alarm2/SmartApi_version3 file
+        r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") 
+        ## only if 200 recieved
         if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
             print ("OK")
             while 1:
                 response = ast.literal_eval(requests_out.text)
                 user_input = 'yes'
-                while (re.search(r'yes',user_input)):
+                while (re.search(r'yes', str(user_input))):
                     ## which device to operate by user  
                     print ("what do you want to control \n1. alarm  \n2. lights")
-                    #engine.say("choose one of them what do you want to control alarm or lights")
-                    #engine.runAndWait()                                             
-                    ##device_operate = SmartApi.myCommand(self)
-                    device_operate = raw_input("device operate = ")
-                    print (device_operate)
-                    if re.search(r'lights|light' , device_operate) :
+                    engine.say("choose one of them what do you want to control alarm or lights")
+                    engine.runAndWait()                                             
+                    device_operate = SmartApi.myCommand(self)
+                    #device_operate = raw_input("device operate = ")
+                    #print (device_operate)
+                    if re.search('lights|light' , str(device_operate)) :
                         obj_controls.lights(response)
-                    elif re.search(r'alarm' , device_operate):
+                    elif re.search('alarm|reminder' , str(device_operate)):
                         obj_controls.alarms(response)
                     else :
                         print ("I cannot control %s " %device_operate)
@@ -78,17 +79,16 @@ class SmartApi():
                     
                     ## for another session
                     print ("do you want to operate other devices , yes or no") 
-                    #engine.say("do you want to operate other devices , yes or no")
-                    #engine.runAndWait()
-                    #user_input = SmartApi.myCommand(self)
-                    user_input =  raw_input("user_input = ")
-                    if re.search(r'no' , user_input) or re.search(r'logout',  user_input):
+                    engine.say("do you want to operate other devices , yes or no")
+                    engine.runAndWait()
+                    user_input = SmartApi.myCommand(self)
+                    #user_input =  raw_input("user_input = ")
+                    if re.search(r'no' , str(user_input)) or re.search(r'log.?out',  str(user_input)):
                         print ("logging out of system")
                         engine.say("logging out of system")
                         engine.runAndWait()
                         response['api_key'] = "0"
-                        print ("call commands function")
-                        main()
+                        sys.exit()
                     else :
                         pass
 
@@ -96,93 +96,35 @@ class SmartApi():
 ## other modules of facial recognition and sentiment analysis will also be controlled from here only 
 
 def main():
-	#obj_controls = SmartApi_with_alarm.controls()
-	#obj_controls.alarms()
-    print ("1.to control devices please login ! , say home automation login \nto exit the console say exit")
-   	#engine.say("to control devices please login ! for login , say home automation login to exit the console say exit")
-    #engine.runAndWait()
-
-    #>>>> extract_command = SmartApi.myCommand(self)
-    extract_command = raw_input("extract_command = ")
-
+    #obj_controls = SmartApi_with_alarm.controls()
+    #obj_controls.alarms()
+    
     ## run facial recognition module here 
     ## tells whether a person is stranger or authorized
-    ##name = recognition.face()
-    ##if name == 'Stranger':
-    	#print ("you are unauthorized person")
-    	#engine.say("you are unauthorized person")
-    	#engine.runAndWait()
-    	#sys.exit()
-
-    if re.search(r"home automation" , extract_command) and re.search(r"login" , extract_command) :
-        ## once login and password are it should be in infinte loop 
-        ## only 3 attempts are allowed for mail_id input
-        for i in [0,1,2]:
-            ## in general program we will match through usernames not mail ids stored data in database
-            print ("Your mail id please !")
-            #engine.say('Your mail id please !')
-            #engine.runAndWait()
-            #mail_id = SmartApi.myCommand(self)
-            mail_id = raw_input("mail_id = ")
-            ## taking the password for only 1 id , can be upgraded afterwards , for multiple users
-            if mail_id == "chetna agarwal":
-                ## taking password for the ids but only 3 attempts are allowed  
-                flag = 3
-                #engine.say("enter your password")
-                #engine.runAndWait()
-                password = raw_input("Enter your password = ")                  
-                while (mail_id == "chetna agarwal"):
-                    ## if password is correct then ask for device operations (3 attempts)
-                    if password == "chetna":
-                        ## it can be reomved only if we call lights or alarm function after it  , user_log for login confirmation
-                        ## confirming the log in by voice output
-                        state = "You are logged in " + mail_id
-                        print (state)
-                        ##engine.say(state)
-                        ##engine.runAndWait()
-                        obj_SmartApi.valid_func(password)
-                        ##("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password)
-                    elif flag > 0:
-                    ## for wrong attempts
-                        flag =  flag - 1
-                        engine.say("enter your password")
-                        engine.runAndWait()
-                        password = raw_input("Enter your password = ") 
-                    else :
-                        print ("Exceeded the number of attempts , Try Again")
-                        engine.say("exceeded the number of attempts , try again")
-                        engine.runAndWait()
-                        sys.exit(0)
-        else :
-            print ("wrong attempts exceeded")
-            print ("Exiting the program ")
-            engine.say("exiting the program")
-            engine.runAndWait()
-            sys.exit()
-    elif re.search(r'exit' , extract_command):
-        print ("Exiting the console")
-        engine.say("exiting the console")
+   # name = recognition.face()
+    name = ""
+    if name == 'Stranger':
+        print ("you are unauthorized person")
+        engine.say("you are unauthorized person")
         engine.runAndWait()
         sys.exit()
     else :
-        print ("Unexpected command given by user ")
-        engine.say("unexpected command given by user")
-        engine.runAndWait()  
-        main()   
-        #self.commands()  
-
+        print ("You are logged in ")
+        engine.say("Welcome ")
+        engine.runAndWait()
+        obj_SmartApi.valid_func()
 
 if __name__ == "__main__":
 
-	## intialising the engine module for text to speech
-	engine=pyttsx.init()
-	voices = engine.getProperty('voices')
-	engine.setProperty('voice', voices[1].id)
-	engine.setProperty('rate', 150)
-	
+    ## intialising the engine module for text to speech
+    engine=pyttsx.init()
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[1].id)
+    engine.setProperty('rate', 150)
+    
     ## making the objects from the current module of SmartApi 
-	obj_SmartApi = SmartApi()
+    obj_SmartApi = SmartApi()
     ## making the objects of SmartApi_version2 module
-	obj_controls = SmartApi_version3.controls()
-	obj_SmartApi_try = SmartApi_version3.SmartApi_try()
-	main()
+    obj_controls = SmartApi_version3.controls()
+    obj_SmartApi_try = SmartApi_version3.SmartApi_try()
+    main()
