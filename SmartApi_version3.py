@@ -37,38 +37,45 @@ class SmartApi_try():
             return (r.text , req_result)
         except requests.exceptions.Timeout as e:
             print ("Timeout ! Try Again")
-            #engine.say("timeout try again")
-            #engine.runAndWait()
+            engine.say("timeout try again")
+            engine.runAndWait()
             time.sleep(5)
             self.valid_url(url)
         except requests.exceptions.TooManyRedirects:
             print ("Too Many Requests")
-            #engine.say("too Many requests")
-            #engine.runAndWait()
+            engine.say("too Many requests")
+            engine.runAndWait()
             time.sleep(5)
             self.valid_url(url)
         except requests.exceptions.RequestException as e:
             print ("lost connectivity")
-            #engine.say("lost connectivity")
-            #engine.runAndWait()
+            engine.say("lost connectivity")
+            engine.runAndWait()
             time.sleep(5)
             self.valid_url(url)
         except RuntimeError as e:
             print ("Took too long to connect , Try Again!")
-            #engine.say("too Many requests")
-            #engine.runAndWait()            
+            engine.say("too Many requests")
+            engine.runAndWait()            
             sys.exit()
-
+        except Exception as e :
+            print (e)
+            engine.say("couldn't handle ")
+            engine.runAndWait()
+            self.valid_url(url)
+            
+    
     def myCommand(self):
         ## function to be executed till internet connectivity is available again
         r = sr.Recognizer()
+        r.dynamic_energy_threshold = False
         try :
             with sr.Microphone() as source:
                 print('Ready...')
                 r.pause_threshold = 1
                 r.adjust_for_ambient_noise(source, duration=1)
                 print("Speak")
-                audio = r.listen(source)
+                audio = r.listen(source , timeout = 5.0)
                 try:
                     command = r.recognize_google(audio).lower()
                     print('You said: ' + command + '\n')
@@ -96,17 +103,18 @@ class controls(SmartApi_try):
     def alarms(self , response):
         while 1:
             ##http://codeglobal.in/home_automation1/fetchalarmdetails.php?api_key=x
+            self.response =  response
             fixed_fetch_url = "http://codeglobal.in/home_automation1/fetchalarmdetails.php?"
             fixed_alarm_url = "http://codeglobal.in/home_automation1/alarm.php?"
             
-            print ("typical statement of form , set  alarm to 7:00 p.m. for Monday or remove alarm to 7:00 p.m. for Monday , to see exiting alarms say see my previous alarms")
-            #engine.say("typical statement of form , set  alarm to 7:00 p.m. for monday or remove alarm to 7:00 p.m. for monday")
-            #engine.runAndWait()
+            print ("typical statement of form , set  alarm to 7:00 p.m. for Monday or remove alarm to 7:00 p.m. for Monday , to see existing alarms say see my previous alarms")
+            engine.say("typical statement of form , set  alarm to 7:00 p.m. for monday or remove alarm to 7:00 p.m. for monday")
+            engine.runAndWait()
 
-            #alarm_set =  SmartApi_try.myCommand(self)
+            alarm_set =  SmartApi_try.myCommand(self)
             alarm_mode = raw_input("set alarm = ")
             
-            if re.search(r'alarm' , alarm_mode) and (re.search(r'set' , alarm_mode) or re.search(r'remove' , alarm_mode)):
+            if re.search(r'alarm|reminder' , alarm_mode) and (re.search(r'set' , alarm_mode) or re.search(r'remove' , alarm_mode)):
                 date_time = str(parser.parse(alarm_mode , fuzzy = True))
                 #print (date_time)
                 date_time = date_time.split(" ")
@@ -141,6 +149,12 @@ class controls(SmartApi_try):
                 elif re.findall(r'set' , alarm_mode) :
                     mode = 'set'
 
+                ## ask for text to be added 
+                #reminder = raw_input("Enter the reminder")
+                engine.say("enter the reminder")
+                engine.runAndWait()
+                alarm_set =  SmartApi_try.myCommand(self)                
+
                 ## thus 4 things are to be passed in the database 
                 ## action , alarm_day , alarm_date , alarm_time
                 #print ("time = %s" %(alarm_time))
@@ -160,8 +174,8 @@ class controls(SmartApi_try):
                 time_milli = time.mktime(dt.timetuple())*1000 + int(76)*10
                 if time_milli < time.time()*1000:
                     print ("Time already passed")
-                    #engine.say("time already passed")
-                    #engine.runAndWait()
+                    engine.say("time already passed")
+                    engine.runAndWait()
                     self.alarms(12)
                 else :
                     pass
@@ -175,26 +189,26 @@ class controls(SmartApi_try):
                 output = ast.literal_eval(r)
                 if output['success'] == "1":
                     print ("alarm had been added")
-                    #engine.say("alarm had been added")
-                    #engine.runAndWait()
+                    engine.say("alarm had been added")
+                    engine.runAndWait()
                 elif output['success'] == '-1':
                     print ("alarm already exists ")
-                    #engine.say("alarm already exists")
-                    #engine.runAndWait()
+                    engine.say("alarm already exists")
+                    engine.runAndWait()
                 elif output['success'] == "0":
                     print ("alarm had been removed")
-                    #engine.say("alarm had been removed")
-                    #engine.runAndWait()
+                    engine.say("alarm had been removed")
+                    engine.runAndWait()
                 elif output['success'] == "2":
                     print ("alarm doesn't exit " )
-                    #engine.say("alarm doesn't exist")
-                    #engine.runAndWait()
+                    engine.say("alarm doesn't exist")
+                    engine.runAndWait()
                 else :
                     print ("unrecognizable operations")
-                    #engine.say("unrecognizable operations")
-                    #engine.runAndWait()
+                    engine.say("unrecognizable operations")
+                    engine.runAndWait()
 
-            elif re.search(r'previous' , alarm_mode) and re.search(r'alarm' , alarm_mode):
+            elif re.search(r'previous' , str(alarm_mode)) and re.search(r'alarm' , str(alarm_mode)):
                 fetch_url =  fixed_fetch_url + "api_key="+response['api_key']
                 #print (fetch_url)
                 r , json = SmartApi_try.valid_url(self , fetch_url)
@@ -216,25 +230,26 @@ class controls(SmartApi_try):
                         #print (alarm_status)
             else :
                 print ("Wrong command , Try Again !")
-                #engine.say("wrong command , try Again")
-                #engine.runAndWait()             
+                engine.say("wrong command , try Again")
+                engine.runAndWait()             
                 self.alarms()   
             while 1:
                 ## call the SmartApi_try()
                 user_input = raw_input("do you want to set another alarm , yes or no \n")
-                #engine.say("do you want to set another alarm yes or no")
-                #engine.runAndWait()
-                #user_input = SmartApi_try.myCommand(self)
+                engine.say("do you want to set another alarm yes or no")
+                engine.runAndWait()
+                user_input = SmartApi_try.myCommand(self)
                 ## check sometime gives wrong input 
                 #print ("user_input = " ,user_input)
-                if re.search(r'no' , user_input) or user_input == "no":
+                if re.search(r'no' , str(user_input)) or user_input == "no":
                     return 1
-                elif re.search(r'yes' , user_input) or  user_input == "yes":
+                elif re.search(r'yes' , str(user_input)) or  user_input == "yes":
                     break
                 else :
                     print ("Wrong Input , Try Again !")
-                    #engine.say("wrong input , try again")
-                    #engine.runAndWait()
+                    alarms(self.response)
+                    engine.say("wrong input , try again")
+                    engine.runAndWait()
 
     ## lights function for accessing the lights 
     def lights(self , response):
@@ -247,19 +262,19 @@ class controls(SmartApi_try):
             ## which device to operate by user  
             print ("\n")
             print ("options for light controls are \n device 1 \n device 2 \n device 3 \n device 4 \n all devices\n")              
-            #engine.say("options for light controls are device 1 device 2 device 3 device 4 and all devices ")              
-            #engine.runAndWait()
+            engine.say("options for light controls are device 1 device 2 device 3 device 4 and all devices ")              
+            engine.runAndWait()
 
             print ("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
             print ("in order to check the status of lights say check status of lights")
-            #engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
-            #engine.runAndWait()
+            engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
+            engine.runAndWait()
 
             ## checking the device input by user 
 
-            #device_operate = SmartApi_try.myCommand(self)
+            device_operate = str(SmartApi_try.myCommand(self))
             ##>>>>> change this 
-            device_operate =  raw_input("device_operate = ")
+            #device_operate =  raw_input("device_operate = ")
             #print (str(device_operate))
 
             ## check the current status of all devices 
@@ -324,7 +339,7 @@ class controls(SmartApi_try):
                     engine.say("no such device registered")
                     engine.runAndWait()
                     print ("no such device registered")
-                    self.lights()
+                    self.lights(self.response)
             elif re.search("device" , str(device_operate)) and re.search("on" , str(device_operate)):
                 if re.search(r" 1 | one " , str(device_operate)):
                     if device_status['status1'] == 'on':
@@ -404,160 +419,13 @@ class controls(SmartApi_try):
                 engine.say("no such device registered")
                 engine.runAndWait()
                 print ("no such device registered")
-                self.lights()
+                self.lights(self.response)
 
 
 
-    def commands(self):
-        ## extracting variables from the command for user defined input
-        ## call the function of base class for taking the input command through speech
 
-        print ("1.to control devices please login ! , say home automation login \nto exit the console say exit")
-        #engine.say("to control devices please login for login , say home automation login to exit the console say exit")
-        #engine.runAndWait()
-
-        ## >>>> #extract_command = str(SmartApi_try.myCommand(self))
-        extract_command = raw_input('extract_command = ')
-        ## this loop works fine and returns only expected value
-        if re.search(r"home automation" , extract_command) and re.search(r"login" , extract_command) :
-
-            ## once login and password are it should be in infinte loop 
-            ## and after a fixed time say 5 mins the program ends 
-            ## only 3 attempts are allowed for mail_id input
-            for i in [0,1,2]:
-                ## in general program we will match through usernames not mail ids
-                ## that too from stored data in database
-                print ("Your mail id please !")
-                #engine.say('Your mail id please !')
-                #engine.runAndWait()
-
-                ## takes the input for mail_id
-
-                ## >>>> extra   self.mail_id = SmartApi_try.myCommand(self)
-                self.mail_id = 'chetna agarwal'
-
-                ## taking the password for only 1 id , 
-                ## that can be upgraded afterwards , for multiple users
-
-                ## to check the mail id of user if mail id matches then ask for password only
-                if self.mail_id == "chetna agarwal":
-
-                    ## taking password for the ids but only 3 attempts are allowed  
-                    flag = 3
-                    engine.say("Enter your password")
-                    engine.runAndWait()
-                    password = raw_input("Enter your password = ")                  
-                    while re.search("chetna agarwal" , str(self.mail_id)):
-                        ## if password is correct then ask for device operations (3 attempts)
-                        if password == "chetna":
-                            ## it can be reomved only if we call lights or alarm function after it  , user_log for login confirmation
-                            ## confirming the log in by voice output
-                            print ("You are logged in %s" %(self.mail_id))
-                            engine.say("You are logged in %s" %(self.mail_id))
-                            engine.runAndWait()
-
-                            try :
-                                requests_out =  requests.get("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass="+password)
-                                ## checking the output of both json and text to get the api_key
-                                print ("json output of the response \n %s"%(requests_out.json))
-                                ## in case of response 200 , print "ok"
-                                if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
-                                    print ("OK")
-                                    while 1:
-                                        ## taking out API key from the response 
-                                        self.response = ast.literal_eval(requests_out.text)
-                                        user_input = 'yes'
-                                        while (re.search(user_input , 'yes')):
-                                            ## which device to operate by user  
-                                            print ("what do you want to control \n1. alarm  \n2. lights")
-                                            engine.say("choose one of them what do you want to control alarm or lights")
-                                            engine.runAndWait()                                             
-                                            #>>>>>>>>>>>>>>>>>>>>>>>>>>>            #self.device_operate = SmartApi_try.myCommand(self)
-                                            self.device_operate = raw_input("device operate = ")
-                                            ## more devices can be added in this module at 
-                                            if re.search(r'lights|light' , self.device_operate) :
-                                                ## call lights
-                                                ## checking the status of lights
-                                                self.lights()
-                                            elif re.search(r'alarm' , self.device_operate):
-                                                print ("Module is incomplete") 
-                                                engine.say("Module is incomplete")
-                                                engine.runAndWait()
-                                                ## call alarm function here
-                                            else :
-                                                print ("I cannot control %s " %self.device_operate)
-                                                engine.say("I cannot control %s " %self.device_operate)
-                                                engine.runAndWait()
-                                            
-                                            ## for another session
-                                            print ("do you want to operate other devices , yes or no") 
-                                            engine.say("do you want to operate other devices , yes or no")
-                                            engine.runAndWait()
-                                            #>>>>>>>>>>>>>>>>>>>>>>>>>>>           
-                                            #user_input = SmartApi_try.myCommand(self)
-                                            user_input =  raw_input("user_input = ")
-                                            if re.search('no' , user_input) or re.search('logout',  user_input):
-                                                print ("logging out of system")
-                                                engine.say("logging out of system")
-                                                engine.runAndWait()
-                                                self.response['api_key'] = "0"
-                                                self.commands()
-                                            else :
-                                                pass
-                            except requests.exceptions.Timeout as e:
-                                print ("Timeout ! Try Again !")
-                                engine.say("timeout try again")
-                                engine.runAndWait()
-                                self.commands()
-                            except requests.exceptions.TooManyRedirects:
-                                print ("Too Many Requests passed , Try Again !")
-                                engine.say("too many requests")
-                                engine.runAndWait()
-                                self.commands()
-                            except requests.exceptions.RequestException as e:
-                                print ("lost connectivity . Try Again !")
-                                engine.say("lost connectivity try again")
-                                engine.runAndWait()
-                                self.commands()
-                        elif flag > 0:
-                        ## for wrong attempts
-                            engine.say("Enter your password")
-                            engine.runAndWait()
-                            password = raw_input("Enter your password = ") 
-                            flag = flag - 1
-                        else :
-                            print ("Exceeded the number of attempts , Try Again")
-                            engine.say("Exceeded the number of attempts , Try Again")
-                            engine.runAndWait()
-                            sys.exit(0)
-        
- 
-            ## we will exit  while loop only after flag becomes 0
-            ## variable to check no of attempts  
-            else :   
-                print ("three wrong attempts for mail id , try again")
-                engine.say("three wrong attempts for mail id , try again")
-                engine.runAndWait()
-                print ("Exiting the program ")
-                engine.say("Exiting the program")
-                engine.runAndWait()
-                sys.exit()
-   
-            
-        elif re.search(r'exit' , extract_command):
-            print ("Exiting the console")
-            engine.say("Exiting the console")
-            engine.runAndWait()
-            sys.exit()
-        else :
-            print ("Unexpected command given by user ")
-            self.commands()
-            engine.say("Unexpected command given by user")
-            engine.runAndWait()            
 
 ## for simple commands using speech
-
-    
 
 ## creating the object 
 ##obj_SmartApi_try = SmartApi_try()      
