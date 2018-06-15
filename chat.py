@@ -13,11 +13,11 @@ engine.setProperty('voice', voices[1].id)
 engine.setProperty('rate', 150)
 
 def valid_url(url):
-    start_time = time.time()
     #print (url)
     try:
+        url_try = url
         r = requests.get(url)
-        return (json.loads(r.text))
+        return json.loads(r.text)
     except requests.exceptions.Timeout as e:
         print ("Timeout ! Try Again")
         engine.say("timeout try again")
@@ -75,156 +75,234 @@ def assistant(command):
         if re.search('who' , str(command)) and re.search('are|r' , str(command)) and re.search('you|u' , str(command)):
             command = "who are you"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('old' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "how old are you"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)            
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('annoying|annoy' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are annoying"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)             
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('answer' , str(command)) and re.search('my|mi' , str(command)) and  re.search('question' ,str(command)):
             command = "answer my question"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('can' , str(command)) and re.search('get' , str(command)) and  re.search('you|u' ,str(command)):
             command = "can you get smarter"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('bad' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are bad"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)              
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('beautiful|beauty' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are beautiful"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('birth.?date|birth' , str(command)) and  re.search('your|ur' ,str(command)):
             command = "what is your birth date"
             url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('bose|boss' , str(command)) and re.search('your|ur' ,str(command)):
             command = "who is your boss"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('boring' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are boring"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('busy' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "are you busy"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait() 
         elif re.search('help' , str(command)) and re.search('me' , str(command)) and  re.search('you|u' ,str(command)):
             command = "can you help me"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()             
         elif re.search('chat.?bot' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are a chatbot"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()        
         elif re.search('clever' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are so clever"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('crazy' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are crazy"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('do' , str(command)) and re.search('hobby' , str(command)) and  re.search('you|u' ,str(command)):
             command = "do you have a hobby"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('funny|fun.?' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are funny"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('good|gud' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are good"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('happy' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "are you happy"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('hungry' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "are you hungry"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('marry' , str(command))  and  re.search('you|u' ,str(command)):
             command = "will you marry me"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('friends' , str(command)) and re.search('are|r' , str(command)) and  re.search('we|v|wee' ,str(command)):
             command = "are we friends"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('where|were' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "where are you from"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('ready' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "are you ready"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('real|reel' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "are you real"
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
         elif re.search('right' , str(command)) and re.search('are|r' , str(command)) and  re.search('you|u' ,str(command)):
             command = "you are right."
-            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
+            url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
+            time.sleep(2)
+            while (url_text) == None :
+                url_text = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command) 
             print (url_text['Answer'])
             #engine.say(result)
             #engine.runAndWait()
