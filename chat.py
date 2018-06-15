@@ -11,6 +11,7 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 engine.setProperty('rate', 150)
 
+'''
 def myCommand():
     r = sr.Recognizer()
 
@@ -31,16 +32,15 @@ def myCommand():
         command = myCommand();
 
     return command
-
+'''
 
 def assistant(command):
-
-    if 'anaya' in command:
+    if re.search('anaya|inaya' , command) :
         reg_ex=re.search('anaya (.*)', command)
         if reg_ex:
             smalltalk=reg_ex.group(1)
             url = requests.get('http://192.168.43.202/AI/read_all.php?command='+smalltalk) 
-            root= json.loads(url.text) 
+            root= json.loads(url.text) tio
             sleep(2) 
             result= root['response'] 
             print result
@@ -50,4 +50,5 @@ def assistant(command):
 
 
 while True:
-    assistant(myCommand())
+    command =  raw_input("Enter the command = ")
+    assistant(command)
