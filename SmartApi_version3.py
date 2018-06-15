@@ -1,5 +1,5 @@
 ## for multiple devices 
-## need to replace requests.get with valid url
+## solve error after reconneting , see chat.py
 import pyttsx
 import wikipedia
 import speech_recognition as sr
@@ -193,6 +193,8 @@ class controls(SmartApi_try):
                         print ("this works")
                         try :
                             fetch_url =  fixed_fetch_url + "api_key="+resp['api_key']
+                            while  SmartApi_try.valid_url(self , fetch_url ):
+
                             r , json = SmartApi_try.valid_url(self , fetch_url)
                             alarm_status = str(r)
                             alarm_status = list(ast.literal_eval(alarm_status))
@@ -227,7 +229,6 @@ class controls(SmartApi_try):
                     print ("unrecognizable operations")
                     engine.say("unrecognizable operations")
                     engine.runAndWait()
-
             elif re.search(r'previous' , str(alarm_mode)) and re.search(r'alarm' , str(alarm_mode)):
                 fetch_url =  fixed_fetch_url + "api_key="+resp['api_key']
                 #print (fetch_url)
@@ -281,7 +282,6 @@ class controls(SmartApi_try):
 
         resp = response
         fixed_url = "http://codeglobal.in/home_automation1/update.php?"
-
         while 1 :
             ## which device to operate by user  
             print ("\n")
