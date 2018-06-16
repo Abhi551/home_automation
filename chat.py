@@ -47,7 +47,6 @@ def valid_url(url):
         engine.runAndWait()
         valid_url(url)
         
-'''
 def myCommand():
     r = sr.Recognizer()
 
@@ -68,7 +67,6 @@ def myCommand():
         command = myCommand();
 
     return command
-'''
 
 def assistant(command):
     if re.search('anaya|inaya|aanaya' , command) :
