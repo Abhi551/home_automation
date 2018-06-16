@@ -7,14 +7,13 @@ import requests
 import ast 
 import time 
 import sys
-
-#from statistics import mode
 #import recognition
 #import face_recognition
 #import SmartApi_with_alarm2
 import SmartApi_version3
+#import other modules also
+#from statistics import mode
 
-## import other modules also
 class SmartApi():
     ## takes the command from user through Microphone
     def myCommand(self):
