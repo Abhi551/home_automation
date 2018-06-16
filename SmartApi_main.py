@@ -52,6 +52,8 @@ class SmartApi():
             self.myCommand()
     def valid_func(self ):
         ## run function from SmartApi_with_alarm2/SmartApi_version3 file
+        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+            pass
         r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") 
         ## only if 200 recieved
         if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
