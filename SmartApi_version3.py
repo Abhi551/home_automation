@@ -65,7 +65,6 @@ class SmartApi_try():
             engine.runAndWait()
             self.valid_url(url)
             
-    '''
     def myCommand(self):
         ## function to be executed till internet connectivity is available again
         r = sr.Recognizer()
@@ -98,7 +97,7 @@ class SmartApi_try():
             print ("Unknown Issues executed")
             print (e)
             self.myCommand()
-    '''
+
 class controls(SmartApi_try):
  
     def alarms(self , response ):
@@ -473,7 +472,7 @@ class controls(SmartApi_try):
 ## creating the object 
 ##obj_SmartApi_try = SmartApi_try()      
 ##x = obj_SmartApi_try.myCommand()
-obj_controls =  controls()
+##obj_controls =  controls()
 ##obj_controls.commands()
 #obj_controls.alarms(response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"})
-obj_controls.lights(response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"})
+##obj_controls.lights(response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"})
