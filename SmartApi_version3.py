@@ -189,23 +189,23 @@ class controls(SmartApi_try):
                         reminder =  SmartApi_try.myCommand(self)  
                         alarm_url = fixed_alarm_url + 'api_key='+resp['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)+'&text='+reminder
                     elif re.search('remove' , alarm_mode) :
-                        print ("this works")
                         try :
                             fetch_url =  fixed_fetch_url + "api_key="+resp['api_key']
-                            while  SmartApi_try.valid_url(self , fetch_url ):
-
-                            r , json = SmartApi_try.valid_url(self , fetch_url)
-                            alarm_status = str(r)
-                            alarm_status = list(ast.literal_eval(alarm_status))
-                            for status in alarm_status:
-                                if float(status['Time_ms']) == float(time_milli):
-                                    text = status['Text'] 
-                                    alarm_url = fixed_alarm_url + 'api_key='+resp['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)+'&text='+text
-                                    print ("here 1")
-                                    print (alarm_url)
+                            url_text = SmartApi_try.valid_url(self , fetch_url )
+                            time.sleep(1)
+                            if url_text == None :
+                                r , json = SmartApi_try.valid_url(self , fetch_url)
+                                alarm_status = str(r)
+                                alarm_status = list(ast.literal_eval(alarm_status))
+                                for status in alarm_status:
+                                    if float(status['Time_ms']) == float(time_milli):
+                                        text = status['Text'] 
+                                        alarm_url = fixed_alarm_url + 'api_key='+resp['api_key']+'&mode='+mode+'&alarm_date='+alarm_date+'&alarm_day='+alarm_day+'&alarm_time='+alarm_time+'&time='+str(time_milli)+'&text='+text
                         except Exception as e:
                             #print (e)
                             self.alarms(resp) 
+                if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                    pass
                 r , json = SmartApi_try.valid_url(self , alarm_url)
                 output = ast.literal_eval(r)
                 if output['success'] == "1":
@@ -231,6 +231,8 @@ class controls(SmartApi_try):
             elif re.search(r'previous' , str(alarm_mode)) and re.search(r'alarm' , str(alarm_mode)):
                 fetch_url =  fixed_fetch_url + "api_key="+resp['api_key']
                 #print (fetch_url)
+                if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                    pass                
                 r , json = SmartApi_try.valid_url(self , fetch_url)
                 #print (r)
                 #print (r.text)
@@ -302,6 +304,8 @@ class controls(SmartApi_try):
 
             ## check the current status of all devices 
             #device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11").text)
+            if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                pass            
             device_status , json = SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11")
             #print (device_status ,json)
             device_status = ast.literal_eval(device_status)['hardware'][0]
@@ -316,6 +320,8 @@ class controls(SmartApi_try):
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status1"+"="+"off"
                         #requests.get(url_parsed)
                         print ("OK")
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
                 elif re.search(r"2 | to | two " , str(device_operate)):
@@ -327,6 +333,8 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status2"+"="+"off"
                         #requests.get(url_parsed)
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
                 elif re.search(r" 3 | three | tree " , str(device_operate)):
@@ -338,6 +346,8 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status3"+"="+"off"
                         #requests.get(url_parsed)
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass                        
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)                   
                 elif re.search(r" 4 | four " , str(device_operate)):
@@ -349,6 +359,8 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status4"+"="+"off"
                         #requests.get(url_parsed)
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
                 elif re.search(r"all" , str(device_operate)):
@@ -384,6 +396,8 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status1"+"="+"on"
                         #requests.get(url_parsed)
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
                 elif re.search(r" 2 | to | two " , str(device_operate)):
@@ -394,6 +408,8 @@ class controls(SmartApi_try):
                     else :
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status2"+"="+"on"
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass    
                         #requests.get(url_parsed)
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -406,6 +422,8 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status3"+"="+"on"
                         #requests.get(url_parsed)
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
                 elif re.search(r" 4 | four " , str(device_operate)):
@@ -416,6 +434,8 @@ class controls(SmartApi_try):
                     else :
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status4"+"="+"on"
+                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                            pass    
                         #requests.get(url_parsed)
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
