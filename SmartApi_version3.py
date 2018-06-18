@@ -1,5 +1,8 @@
 ## for multiple devices 
 ## solve error after reconneting , see chat.py
+
+# one of pyttsx or pytssx3 is used 
+#import pyttsx3
 import pyttsx
 import wikipedia
 import speech_recognition as sr
@@ -97,7 +100,6 @@ class SmartApi_try():
             print ("Unknown Issues executed")
             print (e)
             self.myCommand()
-
 class controls(SmartApi_try):
  
     def alarms(self , response ):
@@ -203,7 +205,7 @@ class controls(SmartApi_try):
                         except Exception as e:
                             #print (e)
                             self.alarms(resp) 
-                if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                if SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                     pass
                 r , json = SmartApi_try.valid_url(self , alarm_url)
                 output = ast.literal_eval(r)
@@ -230,7 +232,7 @@ class controls(SmartApi_try):
             elif re.search(r'previous' , str(alarm_mode)) and re.search(r'alarm' , str(alarm_mode)):
                 fetch_url =  fixed_fetch_url + "api_key="+resp['api_key']
                 #print (fetch_url)
-                if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                     pass                
                 r , json = SmartApi_try.valid_url(self , fetch_url)
                 #print (r)
@@ -287,26 +289,25 @@ class controls(SmartApi_try):
             ## which device to operate by user  
             print ("\n")
             print ("options for light controls are \n device 1 \n device 2 \n device 3 \n device 4 \n all devices\n")              
-            #engine.say("options for light controls are device 1 device 2 device 3 device 4 and all devices ")              
-            #engine.runAndWait()
+            engine.say("options for light controls are device 1 device 2 device 3 device 4 and all devices ")              
+            engine.runAndWait()
 
             print ("\nchoose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
             print ("in order to check the status of lights say check status of lights")
-            #engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
-            #engine.runAndWait()
+            engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
+            engine.runAndWait()
 
             ## checking the device input by user 
 
-            device_operate = str(SmartApi_try.myCommand(self))
-            ##>>>>> change this 
-            #device_operate =  raw_input("device_operate = ")
+            #device_operate = str(SmartApi_try.myCommand(self))
+            device_operate =  raw_input("device_operate = ")
             #print (str(device_operate))
 
             ## check the current status of all devices 
             #device_status = str(requests.get("http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11").text)
-            if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+            if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                 pass            
-            device_status , json = SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11")
+            device_status , json = SmartApi_try.valid_url( self , "http://codeglobal.in/home_automation1/read_all.php?api=a1ebc37f43ee497ca453f84a9e9e7d11")
             #print (device_status ,json)
             device_status = ast.literal_eval(device_status)['hardware'][0]
             ## upgrade for all other devices 
@@ -320,7 +321,7 @@ class controls(SmartApi_try):
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status1"+"="+"off"
                         #requests.get(url_parsed)
                         print ("OK")
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -333,7 +334,7 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status2"+"="+"off"
                         #requests.get(url_parsed)
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -346,7 +347,7 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status3"+"="+"off"
                         #requests.get(url_parsed)
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass                        
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)                   
@@ -359,7 +360,7 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status4"+"="+"off"
                         #requests.get(url_parsed)
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -371,7 +372,7 @@ class controls(SmartApi_try):
                     else :
                         print ("OK")
                         url_parsed = fixed_url+"api_key="+resp["api_key"]+"&"+"status1"+"="+"off"
-                        SmartApi_try.valid_url(self , url_parsed)
+                        SmartApi_try.valid_url(self , url_psarsed)
                         url_parsed = fixed_url+"api_key="+resp["api_key"]+"&"+"status2"+"="+"off"
                         SmartApi_try.valid_url(self , url_parsed)
                         url_parsed = fixed_url+"api_key="+resp["api_key"]+"&"+"status3"+"="+"off"
@@ -396,7 +397,7 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status1"+"="+"on"
                         #requests.get(url_parsed)
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -408,7 +409,7 @@ class controls(SmartApi_try):
                     else :
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status2"+"="+"on"
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass    
                         #requests.get(url_parsed)
                         SmartApi_try.valid_url(self , url_parsed)
@@ -422,7 +423,7 @@ class controls(SmartApi_try):
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status3"+"="+"on"
                         #requests.get(url_parsed)
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass    
                         SmartApi_try.valid_url(self , url_parsed)
                         time.sleep(4.0)
@@ -434,7 +435,7 @@ class controls(SmartApi_try):
                     else :
                         print ("OK")
                         url_parsed =  fixed_url+"api_key="+resp["api_key"]+"&"+"status4"+"="+"on"
-                        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
+                        if SmartApi_try.valid_url(self , "http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
                             pass    
                         #requests.get(url_parsed)
                         SmartApi_try.valid_url(self , url_parsed)
@@ -490,8 +491,8 @@ class controls(SmartApi_try):
 ## for simple commands using speech
 
 ## creating the object 
-##obj_SmartApi_try = SmartApi_try()      
-##x = obj_SmartApi_try.myCommand()
+##SmartApi_try = SmartApi_try()      
+##x = SmartApi_try.myCommand()
 ##obj_controls =  controls()
 ##obj_controls.commands()
 #obj_controls.alarms(response = {'api_key' : "a1ebc37f43ee497ca453f84a9e9e7d11"})
