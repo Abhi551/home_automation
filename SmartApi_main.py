@@ -1,3 +1,4 @@
+# one of pyttsx or pytssx3 is used 
 import pyttsx
 import speech_recognition as sr
 import os
