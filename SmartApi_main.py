@@ -7,6 +7,7 @@ import requests
 import ast 
 import time 
 import sys
+import chat 
 #import recognition
 #import face_recognition
 #import SmartApi_with_alarm2
@@ -63,8 +64,8 @@ class SmartApi():
                 user_input = 'yes'
                 while (re.search(r'yes', str(user_input))):
                     ## which device to operate by user  
-                    print ("what do you want to control \n1. alarm  \n2. lights")
-                    engine.say("choose one of them what do you want to control alarm or lights")
+                    print ("what do you want to control \n1. alarm  \n2. lights \n3. anaya chatbot ")
+                    engine.say("choose one of them what do you want to control alarm , lights or anaya the chatbot")
                     engine.runAndWait()                                             
                     device_operate = SmartApi.myCommand(self)
                     #device_operate = raw_input("device operate = ")
@@ -73,14 +74,24 @@ class SmartApi():
                         obj_controls.lights(response)
                     elif re.search('alarm|reminder' , str(device_operate)):
                         obj_controls.alarms(response)
+                    elif re.search('anaya|inaya|amaya|imaya|aanaya|inaaya' , str(device_operate)):
+                        while 1 :
+                            print ('to chat with inaya say inaya then your queries to stop chatting say stop \n')
+                            engine.say('to chat with inaya say inaya then your queries to stop chatting say stop')
+                            engine.runAndWait()
+                            #command =  raw_input("enter the commands = ")
+                            command =  SmartApi.myCommand()
+                            if command == 'stop':
+                                break
+                            chat.assistant(command)
                     else :
                         print ("I cannot control %s " %device_operate)
                         engine.say("i cannot control %s " %device_operate)
                         engine.runAndWait()
                     
                     ## for another session
-                    print ("do you want to operate other devices , yes or no") 
-                    engine.say("do you want to operate other devices , yes or no")
+                    print ("do you want to interact again , yes or no") 
+                    engine.say("do you want to interact again , yes or no")
                     engine.runAndWait()
                     user_input = SmartApi.myCommand(self)
                     #user_input =  raw_input("user_input = ")
