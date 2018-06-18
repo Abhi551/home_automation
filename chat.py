@@ -3,10 +3,12 @@ import re
 import ast
 import json, requests 
 import time 
+# one of pyttsx or pytssx3 is used 
+#import pyttsx3
 import pyttsx
 from gtts import gTTS
 from time import sleep
-engine=pyttsx.init()
+engine = pyttsx.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 engine.setProperty('rate', 150)
@@ -51,7 +53,7 @@ def assistant(command):
             url = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
             while url == None :
                 url = valid_url('http://codeglobal.in/home_automation1/fetchsmarttalkdetails.php?command='+command)
-            print url['Answer']
+            print (url['Answer'])
             engine.say(url['Answer'])
             engine.runAndWait()
         except ValueError as e:
