@@ -1,0 +1,10 @@
+
+speech_recognition
+json
+requests
+pyttsx 
+gTTS
+webbrowser
+smtlib
+dateutill
+
