@@ -142,7 +142,6 @@ class controls(SmartApi_try):
 
                 week_days = {0 : 'monday' , 1 : 'tuesday' , 2 : 'wednesday' , 3 : 'thursday' , 4 : 'friday' , 5 : 'saturday' , 6 : 'sunday'}
                 alarm_time , alarm_date = date_time[1] , date_time[0]
-
                 
                 if re.findall(r'remove' , alarm_mode):
                     mode = 'remove'
@@ -265,6 +264,7 @@ class controls(SmartApi_try):
             while 1:
                 ## call the SmartApi_try()
                 ##user_input = raw_input("do you want to set another alarm , yes or no \n")
+                print ("do you want to set another alarm yes or no")
                 engine.say("do you want to set another alarm yes or no")
                 engine.runAndWait()
                 user_input = SmartApi_try.myCommand(self)
