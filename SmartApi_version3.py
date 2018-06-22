@@ -1,9 +1,6 @@
 ## for multiple devices 
 ## solve error after reconneting , see chat.py
-
-# one of pyttsx or pytssx3 is used 
-#import pyttsx3
-import pyttsx
+import pyttsx3
 import wikipedia
 import speech_recognition as sr
 import os
@@ -22,7 +19,7 @@ from dateutil import parser
 from gtts import gTTS
 #from weather import Weather
 
-engine=pyttsx.init()
+engine=pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 engine.setProperty('rate', 150)
@@ -71,6 +68,7 @@ class SmartApi_try():
     def myCommand(self):
         ## function to be executed till internet connectivity is available again
         r = sr.Recognizer()
+        #r.energy_threshold = 400
         r.dynamic_energy_threshold = False
         try :
             with sr.Microphone() as source:
@@ -109,8 +107,8 @@ class controls(SmartApi_try):
             fixed_fetch_url = "http://codeglobal.in/home_automation1/fetchalarmdetails.php?"
             fixed_alarm_url = "http://codeglobal.in/home_automation1/alarm.php?"
             
-            print ("typical statement of form , set  alarm to 7:00 p.m. for Monday or remove alarm to 7:00 p.m. for Monday , to see existing alarms say see my previous alarms")
-            engine.say("typical statement of form , set  alarm to 7:00 p.m. for monday or remove alarm to 7:00 p.m. for monday")
+            print ("typical statement of form , set  alarm or reminder  to 7:00 p.m. for Monday or remove alarm to 7:00 p.m. for Monday , to see existing alarms say see my previous alarms")
+            engine.say("typical statement of form , set  alarm or reminder  to 7:00 p.m. for monday or remove alarm to 7:00 p.m. for monday")
             engine.runAndWait()
 
             alarm_mode =  SmartApi_try.myCommand(self)
@@ -156,7 +154,8 @@ class controls(SmartApi_try):
 
                 ## ask for text to be added 
                 #reminder = raw_input("Enter the reminder")
-                engine.say("enter the reminder")
+                print ("What do you want to add in the reminder ")
+                engine.say("what do you want to add in the reminder ")
                 engine.runAndWait()
 
                 ## thus 4 things are to be passed in the database 
@@ -294,13 +293,13 @@ class controls(SmartApi_try):
 
             print ("\nchoose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
             print ("in order to check the status of lights say check status of lights")
-            engine.say("choose your light which you want to turn on or off , if you want to logout say logout , and for controling other devices say go back ")
+            engine.say("choose your light which you want to turn on or off , if you want to logout say logout and for controling other devices say go back in order to check the status of lights say check status of lights")
             engine.runAndWait()
 
             ## checking the device input by user 
 
-            #device_operate = str(SmartApi_try.myCommand(self))
-            device_operate =  raw_input("device_operate = ")
+            device_operate = str(SmartApi_try.myCommand(self))
+            #device_operate =  raw_input("device_operate = ")
             #print (str(device_operate))
 
             ## check the current status of all devices 
