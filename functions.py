@@ -1,7 +1,4 @@
-""" 
-Title: Function for Facial Recognition
-Author: Vinit
-"""
+
 
 import cv2
 import os
