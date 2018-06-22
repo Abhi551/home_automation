@@ -1,140 +1,78 @@
-import pyttsx3
-import speech_recognition as sr
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jun  7 15:20:47 2018
+
+@author: Sandesh
+"""
+
+
 import os
-import nltk
-import re
+import vlc
+chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+url='https://youtu.be/iSUT1jJVTu0'
+emotion=0
+ip="http://codeglobal.in/wp-content/uploads/2018/06/songs/list.txt"
+
+#r=requests.get(ip)
+
 import requests
-import ast 
-import time 
-import sys
-import chat
-import Sentiments 
-import DataCollection
-import functions
-import recognition
-import SmartApi_version3
-#import other modules also
-from statistics import mode
+from random import shuffle
+import re
+import speech_recognition as sr
 
-class SmartApi():
-    ## takes the command from user through Microphone
-    def myCommand(self):
-        ## function to be executed till internet connectivity is available again
-        r = sr.Recognizer()
-        r.dynamic_energy_threshold = False
-        try :
-            with sr.Microphone() as source:
-                print('Ready...')
-                r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source, duration=1)
-                print("Speak")
+r=sr.Recognizer()
+m = sr.Microphone()
+def record_audio():
+  print("A moment of silence, please...")
+  with m as source:
+    r.adjust_for_ambient_noise(source)
+    print("Set minimum energy threshold to {}".format(r.energy_threshold))
+  print("speak: ")
+  with m as source: audio = r.listen(source,timeout=3)
+  print("Got it! Now to recognize it...")
+  value = r.recognize_google(audio)
+  print(value)
+  return value
  
-                audio = r.listen(source , timeout = 5.0)               
-                try:
-                    command = r.recognize_google(audio).lower()
-                    print('You said: ' + command + '\n')
-                    return (str(command))
-                #loop back to continue to listen for commands if unrecognizable speech is received
-                except sr.UnknownValueError:
-                    print("We couldn't understand your last command \nTry Again!")
-                    engine.say("we couldn't understand your last command Try Again!")
-                    engine.runAndWait()
-                    command = self.myCommand() ##if no input is provided by the user 
-                except sr.RequestError as e:
-                    print ("Could not request your results due to lost connectivity")
-                    engine.say("could not request your results due to lost connectivity")
-                    engine.runAndWait()
-                    self.myCommand()
-                except Exception as e :
-                    print ("Unknown Issues")
-                    self.myCommand()
-        except Exception as e:
-            print ("Unknown Issues executed")
-            print (e)
-            self.myCommand()
-    def valid_func(self ):
-        ## run function from SmartApi_with_alarm2/SmartApi_version3 file
-        if obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") == None :
-            pass
-        r , requests_out = obj_SmartApi_try.valid_url("http://codeglobal.in/home_automation1/android_login.php?tag=login&user=chetna.agarwal@codeglobal.in&pass=chetna") 
-        ## only if 200 recieved
-        if int(re.findall(r'[0-9]+', str(requests_out.json))[0]) == 200:
-            print ("OK")
-            while 1:
-                response = ast.literal_eval(requests_out.text)
-                user_input = 'yes'
-                while (re.search(r'yes', str(user_input))):
-                    ## which device to operate by user  
-                    print ("what do you want to control \n1. alarm  \n2. lights \n3. anaya chatbot ")
-                    engine.say("choose one of them what do you want to control alarm , lights or anaya the chatbot")
-                    engine.runAndWait()                                             
-                    device_operate = SmartApi.myCommand(self)
-                    #device_operate = raw_input("device operate = ")
-                    #print (device_operate)
-                    if re.search('lights|light' , str(device_operate)) :
-                        obj_controls.lights(response)
-                    elif re.search('alarm|reminder' , str(device_operate)):
-                        obj_controls.alarms(response)
-                    elif re.search('anaya|inaya|amaya|imaya|aanaya|inaaya' , str(device_operate)):
-                        while 1 :
-                            print ('to chat with anaaya say anaaya then your queries to stop chatting say stop \n')
-                            engine.say('to chat with anaaya say anaaya then your queries to stop chatting say stop')
-                            engine.runAndWait()
-                            #command =  raw_input("enter the commands = ")
-                            command =  SmartApi.myCommand(self)
-                            if command == 'stop':
-                                break
-                            chat.assistant(command)
-                    else :
-                        print ("I cannot control %s " %device_operate)
-                        engine.say("i cannot control %s " %device_operate)
-                        engine.runAndWait()
-                    
-                    ## for another session
-                    print ("do you want to interact again , yes or no") 
-                    engine.say("do you want to interact again , yes or no")
-                    engine.runAndWait()
-                    user_input = SmartApi.myCommand(self)
-                    #user_input =  raw_input("user_input = ")
-                    if re.search(r'no' , str(user_input)) or re.search(r'log.?out',  str(user_input)):
-                        print ("logging out of system")
-                        engine.say("logging out of system")
-                        engine.runAndWait()
-                        response['api_key'] = "0"
-                        sys.exit()
-                    else :
-                        pass
+class play_song:
+    def __init__(self,ip):
+        self.ip=ip
+        self.player=self.set_player()
+        
+    def set_player(self):
+      u=requests.get(self.ip)
+      new_list=[]
+      source=self.ip[:-9]    
+      instance=vlc.Instance()
+      MediaList = instance.media_list_new()
+      for l in u.iter_lines():
+        l=l.decode('utf-8')
+        #MediaList.add_media(instance.media_new(source+'/'+re.findall('[0-9A-Za-z].mp3',l)[0]))
+        new_list.append(re.match('(.*?).mp3',l).group())
+      shuffle(new_list)
+      for l in new_list:
+          MediaList.add_media(instance.media_new(source+'/'+l))
 
-## might work on controlling the objects of SmartApi_version2 from here 
-## other modules of facial recognition and sentiment analysis will also be controlled from here only 
+      p=instance.media_list_player_new()
+      p.set_media_list(MediaList)
+      return p
+    def play_next(self):
+        if(self.player.next()!=0):
+            self.player.stop()
+            self.player=self.set_player()
+            self.player.next()
+        
+    def stop(self):
+        self.player.stop()
+    def pause(self):
+        self.player.pause()
+    def play(self):
+        self.player.play()
 
-def main():
-
-    ## run facial recognition module here 
-    ## tells whether a person is stranger or authorized
-    name = recognition.face()
-    if name == 'Stranger':
-        print ("you are unauthorized person")
-        engine.say("you are unauthorized person")
-        engine.runAndWait()
-        sys.exit()
-    else :
-        print ("You are logged in ")
-        engine.say("Welcome ")
-        engine.runAndWait()
-        obj_SmartApi.valid_func()
-
-if __name__ == "__main__":
-
-    ## intialising the engine module for text to speech
-    engine=pyttsx3.init()
-    voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[1].id)
-    engine.setProperty('rate', 150)
-    
-    ## making the objects from the current module of SmartApi 
-    obj_SmartApi = SmartApi()
-    ## making the objects of SmartApi_version2 module
-    obj_controls = SmartApi_version3.controls()
-    obj_SmartApi_try = SmartApi_version3.SmartApi_try()
-    main()
+'''if __name__=='__main__':
+    value=record_audio()
+    if(value=='play song'):
+        p=play_song(ip)
+        p.play_next()
+    '''
+       
