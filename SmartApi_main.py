@@ -1,5 +1,4 @@
-# one of pyttsx or pytssx3 is used 
-import pyttsx
+import pyttsx3
 import speech_recognition as sr
 import os
 import nltk
@@ -8,19 +7,22 @@ import requests
 import ast 
 import time 
 import sys
-import chat 
-#import recognition
-#import face_recognition
-#import SmartApi_with_alarm2
+import chat
+################################
+import Sentiments 
+import DataCollection
+import functions
+import recognition
+#################################
 import SmartApi_version3
-#import other modules also
-#from statistics import mode
+#from statistics import mode , median
 
 class SmartApi():
     ## takes the command from user through Microphone
     def myCommand(self):
         ## function to be executed till internet connectivity is available again
         r = sr.Recognizer()
+        #r.energy_threshold = 400
         r.dynamic_energy_threshold = False
         try :
             with sr.Microphone() as source:
@@ -28,7 +30,6 @@ class SmartApi():
                 r.pause_threshold = 1
                 r.adjust_for_ambient_noise(source, duration=1)
                 print("Speak")
- 
                 audio = r.listen(source , timeout = 5.0)               
                 try:
                     command = r.recognize_google(audio).lower()
@@ -65,11 +66,11 @@ class SmartApi():
                 user_input = 'yes'
                 while (re.search(r'yes', str(user_input))):
                     ## which device to operate by user  
-                    print ("what do you want to control \n1. alarm  \n2. lights \n3. anaya chatbot ")
-                    engine.say("choose one of them what do you want to control alarm , lights or anaya the chatbot")
+                    print ("what do you want to control \n1. alarm  \n2. lights \n3. anaya chatbot \n4. add new face ")
+                    engine.say("choose one of them what do you want to control alarm , lights or anaya the chatbot to add new faces say add new face")
                     engine.runAndWait()                                             
                     device_operate = SmartApi.myCommand(self)
-                    #device_operate = raw_input("device operate = ")
+                    #device_operate = input("device operate = ")
                     #print (device_operate)
                     if re.search('lights|light' , str(device_operate)) :
                         obj_controls.lights(response)
@@ -77,14 +78,17 @@ class SmartApi():
                         obj_controls.alarms(response)
                     elif re.search('anaya|inaya|amaya|imaya|aanaya|inaaya' , str(device_operate)):
                         while 1 :
-                            print ('to chat with inaya say inaya then your queries to stop chatting say stop \n')
-                            engine.say('to chat with inaya say inaya then your queries to stop chatting say stop')
+                            print ('to chat with anaaya say anaaya then your queries to stop chatting say stop \n')
+                            engine.say('to chat with anaaya say anaaya then your queries to stop chatting say stop')
                             engine.runAndWait()
                             #command =  raw_input("enter the commands = ")
-                            command =  SmartApi.myCommand()
+                             command =  SmartApi.myCommand(self)
                             if command == 'stop':
                                 break
                             chat.assistant(command)
+                    elif re.search(r'add' , str(device_operate)) and re.search(r'face' , str(device_operate)):
+                        print ("this runs")
+                        DataCollection.collect()
                     else :
                         print ("I cannot control %s " %device_operate)
                         engine.say("i cannot control %s " %device_operate)
@@ -112,23 +116,24 @@ def main():
 
     ## run facial recognition module here 
     ## tells whether a person is stranger or authorized
-    #name = recognition.face()
-    name = ""
+    name = recognition.face()
     if name == 'Stranger':
         print ("you are unauthorized person")
         engine.say("you are unauthorized person")
         engine.runAndWait()
-        sys.exit()
+        time.sleep(10.0)
+        main()
     else :
         print ("You are logged in ")
-        engine.say("Welcome ")
+        engine.say("Welcome")
         engine.runAndWait()
+        Sentiments.main()
         obj_SmartApi.valid_func()
 
 if __name__ == "__main__":
 
     ## intialising the engine module for text to speech
-    engine=pyttsx.init()
+    engine=pyttsx3.init()
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[1].id)
     engine.setProperty('rate', 150)
