@@ -1,10 +1,26 @@
+1. Speech_recognition :
+	On Ubuntu  : sudo pip install SpeechRecognition or 	
+	On windows using pip install SpeechRecognition 
 
-speech_recognition
-json
-requests
-pyttsx 
-gTTS
-webbrowser
-smtlib
-dateutill
+2. requests :
+	On Ubuntu :  sudo easy_install requests
+        On Windows  : python -m pip install requests
+
+3. pyttsx :
+	On Ubuntu : sudo pip install pyttsx 
+	On windows : pip install pyttsx 
+	
+4. gTTS :
+	On Ubuntu : sudo pip install gTTS
+	On windows : pip install gTTS
+
+5. Dateutill
+	On Ubuntu : sudo apt get install python-dateutil or sudo pip      install python-dateutil  
+	On windows : pip install python-dateutil 
+
+6. wikipedia 
+	On Ubuntu : sudo pip install wikipedia
+	On windows : pip install wikipedia 	
+
+
 
