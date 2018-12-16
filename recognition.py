@@ -8,7 +8,7 @@ from statistics import mode
 
 def face():
 	known_face_encoding , name_list = [] , []
-	path = "/home/vinit/Desktop/ML/Self notes/Computer Vision/facial_rec/Pics"
+	path = "/home/Desktop/ML/Self notes/Computer Vision/facial_rec/Pics"
 	cap = cv2.VideoCapture(0)
 
 	#Returns list of faces from the captured images
