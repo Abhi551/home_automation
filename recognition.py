@@ -26,7 +26,7 @@ def face():
 	        known_face_encoding.append(encoding)
 	                                   
 	#Returns list of known face names from the text file
-	a = open("/home/vinit/Desktop/ML/Self notes/Computer Vision/facial_rec/Names.txt","r").read()
+	a = open("/home/Desktop/ML/Self notes/Computer Vision/facial_rec/Names.txt","r").read()
 	known_face_names = a.split()
 
 	face_locations = []
