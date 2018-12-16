@@ -1,9 +1,3 @@
-#########################################################################
-####         Title:   Data Collection for Facial Recognition         ####
-####         Author:  Vinit                                          ####
-####         Date:    22nd May 2018                                  ####
-#########################################################################
-
 import os 
 import cv2
 import numpy as np
