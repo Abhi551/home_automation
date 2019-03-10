@@ -39,7 +39,7 @@ class sentiment():
   from keras.callbacks import Callback
   from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 
-  '''
+  
   def train_model():   
    classifier = Sequential()
 
@@ -91,7 +91,7 @@ class sentiment():
                            nb_val_samples = 8523)
     classifier.summary()
     return classifier
-  '''
+  
 
   #Prediction
   #class_labels = {v: k for k, v in training_set.class_indices.items()}
